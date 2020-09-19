@@ -18,6 +18,9 @@
     <ClCompile Include="Project.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hash.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Data\dict.txt">
@@ -29,5 +32,10 @@
     <Text Include="..\Data\result.txt">
       <Filter>资源文件</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hash.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
