@@ -1,9 +1,11 @@
-﻿#include <stdio.h>
-#include <Windows.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+// #include <Windows.h>
 
 #include "hash.h"
 
-using namespace std;
+// using namespace std;
 
 /*************************************************
 Function:       get_hash
@@ -28,16 +30,16 @@ void output_result(char* str, FILE* file) {
 	fputc(10, file);
 	if (status == -1) {
 
-		MessageBox(NULL, TEXT("Hello, bccn!"), TEXT("HelloMsg"), 0);
+		// MessageBox(NULL, TEXT("Hello, bccn!"), TEXT("HelloMsg"), 0);
 
 		//TODO: 弹窗提示保存出错
 	}
 }
 
 int main() {
-	FILE* f_str = NULL;
-	FILE* f_dict = NULL;
-	FILE* f_result = NULL;
+	FILE* f_string = NULL;
+	// FILE* f_dict = NULL;
+	// FILE* f_result = NULL;
 
 	//TODO: initialize_hash_table;
 
@@ -45,28 +47,29 @@ int main() {
 
 	//TODO: search and output;
 
-	fopen_s(&f_dict, "../Data/string.txt", "r");
-	if (!f_dict) {
+	f_string = fopen("../Data/string.txt", "r");
+	if (!f_string) {
 		return 0;
 	}
 
-	fopen_s(&f_result, "../Data/result.txt", "w");
+	/*
+	f_result = fopen("../Data/result.txt", "w");
 	if (!f_result) {
 		return 0;
 	}
+	*/
 
 
 	for (size_t i = 0; i < 100; i++)
 	{
 		char str[99];
-		fscanf_s(f_dict, "%s", str, 99);
+		fscanf(f_string, "%s", str, 99);
 		printf("%12s 的hash值是：%u\n", str, get_hash(str));
 
 		// output_result(str, f_result);
 
 	}
 
-	fclose(f_dict);
-	fclose(f_result);
+	fclose(f_string);
 }
 
