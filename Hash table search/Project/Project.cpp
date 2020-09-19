@@ -6,12 +6,12 @@
 using namespace std;
 
 /*************************************************
-Function:       get_hash_key
+Function:       get_hash
 Description:    负责计算给定字符串的哈希值
 Input:          char* str：   char指针
 Return:         unsigned int: 字符串的哈希值
 *************************************************/
-unsigned int get_hash_key(char* str) {
+unsigned int get_hash(char* str) {
 	return 1;
 }
 
@@ -56,12 +56,13 @@ int main() {
 	}
 
 
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < 100; i++)
 	{
 		char str[99];
 		fscanf_s(f_dict, "%s", str, 99);
-		printf("%s", str);
-		output_result(str, f_result);
+		printf("'%12s' 的hash值是：%u\n", str, get_hash(str));
+
+		// output_result(str, f_result);
 
 	}
 
