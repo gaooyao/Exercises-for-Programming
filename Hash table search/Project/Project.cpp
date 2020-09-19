@@ -45,7 +45,7 @@ int main() {
 
 	//TODO: search and output;
 
-	fopen_s(&f_dict, "../Data/dict.txt", "r");
+	fopen_s(&f_dict, "../Data/string.txt", "r");
 	if (!f_dict) {
 		return 0;
 	}
@@ -60,7 +60,7 @@ int main() {
 	{
 		char str[99];
 		fscanf_s(f_dict, "%s", str, 99);
-		printf("'%12s' 的hash值是：%u\n", str, get_hash(str));
+		printf("%12s 的hash值是：%u\n", str, get_hash(str));
 
 		// output_result(str, f_result);
 
