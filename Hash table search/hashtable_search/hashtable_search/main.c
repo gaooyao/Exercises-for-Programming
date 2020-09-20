@@ -154,7 +154,7 @@ int main() {
                 }
                 start_t = clock();
                 for(int k=0;k<10000;k++){
-                    //printf("%s",list[k]);
+                    printf("%s",list[k]);
                     BKDRHash(list[k]);
                 }
                 end_t=clock();
