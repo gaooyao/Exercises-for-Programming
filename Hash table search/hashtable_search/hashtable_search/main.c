@@ -139,7 +139,7 @@ int main() {
         
         
             FILE* f_string = NULL;
-            f_string = fopen("string.txt", "r");
+            f_string = fopen("string.txt", "wr");
             //start_t = clock();
             if (!f_string)
             {
