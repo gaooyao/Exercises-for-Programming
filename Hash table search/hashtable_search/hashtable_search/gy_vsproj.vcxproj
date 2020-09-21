@@ -140,15 +140,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="gy_vsproj.cpp" />
-    <ClCompile Include="hash.cpp" />
+    <ClCompile Include="gy.cpp" />
+    <ClCompile Include="hash.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="yn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dict.txt" />
+    <Text Include="result.txt" />
     <Text Include="string.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hash.h" />
+    <ClInclude Include="struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

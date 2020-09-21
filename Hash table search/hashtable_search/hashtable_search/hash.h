@@ -1,3 +1,8 @@
+#ifndef	node_struct
+#define node_struct
+
+#include "hash.c"
+
 // SDBMHashËã·¨
 unsigned int SDBMHash(char* str);
 
@@ -21,3 +26,5 @@ unsigned int DJBHash(char* str);
 
 // AP HashËã·¨
 unsigned int APHash(char* str);
+
+#endif
