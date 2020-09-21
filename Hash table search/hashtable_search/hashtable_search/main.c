@@ -131,15 +131,15 @@ int main() {
     {
        
         clock_t start_t, end_t;
-        double total_t;
-        int i;
+        //double total_t;
+        //int i;
         // start_t = clock();/Users/yangen/Desktop/Exercises-for-Programming/Hash table search/hashtable_search
         // printf("程序启动，start_t = %ld\n", start_t);
         // printf("开始一个大循环，start_t = %ld\n", start_t);
         
         
             FILE* f_string = NULL;
-            f_string = fopen("string.txt", "r");
+            f_string = fopen("string.txt", "wr");
             //start_t = clock();
             if (!f_string)
             {
@@ -153,15 +153,16 @@ int main() {
                     fscanf(f_string, "%s", list[k]);//xieru+duqu
                 }
                 start_t = clock();
+                //SDBMHash,RSHash,JSHash,PJWHash,ELFHash,BKDRHash,DJBHash,APHash
                 for(int k=0;k<10000;k++){
-                    printf("%s",list[k]);
-                    BKDRHash(list[k]);
+                    //printf("%s",list[k]);
+                    APHash(list[k]);
                 }
                 end_t=clock();
                 total_time+=(double)(end_t-start_t);
                 
             }
-            printf(" %fl\n",total_time/ CLOCKS_PER_SEC);
+            printf(" %f\n",total_time/ CLOCKS_PER_SEC);
             //a=a+1;
             //printf("a=%d\n",a);
             //return 0;
