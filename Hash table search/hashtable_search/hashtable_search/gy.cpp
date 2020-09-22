@@ -15,6 +15,8 @@
 #include <time.h>
 #include "struct.h"
 
+
+
 /*
 * 函数名称：open_file
 * 函数功能：负责打开文件
@@ -32,7 +34,7 @@ FILE* open_file(char* file_name, char* open_type) {
 	else {
 		return file;
 	}
-    return file;
+	return file;
 }
 
 /*
@@ -54,19 +56,53 @@ HashNode* create_new_node(char* str) {
 		//创建失败则显示错误信息并退出程序
 		printf("create node fail!");
 		system("stop");
-        return new_node;
+		return new_node;
 	}
-    return new_node;
+	return new_node;
 }
 
-static char str[99];
-void get_line() {
+
+FileHandler* open_fileb(char* file_name, char* open_type) {
+	FILE* _file = (FILE*)malloc(sizeof(FILE));
+	_file = fopen(file_name, open_type);
+	if (!_file) {
+		printf("open %s fail!", file_name);
+		return NULL;
+	}
+	FileHandler* file_handler = (FileHandler*)malloc(sizeof(FileHandler));
+	if (!file_handler) {
+		printf("open %s fail!", file_name);
+		return NULL;
+	}
+	file_handler->file = _file;
+	strcpy(file_handler->file_name, file_name);
+	file_handler->open_type = (open_type == "r" ? 0 : 1);
+	file_handler->point = -1;
+	file_handler->next = NULL;
+	return file_handler;
+}
+
+int read_line(FileHandler* file_handler, char* str) {
+	return 0;
+}
+int write_line(FileHandler* file_handler, char* str) {
+	return 0;
+}
+int close_file(FileHandler* file_handler) {
+	return 0;
+}
+
+void get_line(char* file_name) {
+
+
+
+
 	clock_t start, end;
-	
+
 	FILE* file;
 	file = fopen("dict.txt", "r");
 	start = clock();
-	
+
 	/*while (fscanf(file, "%s", str) != -1) {
 
 	}*/
@@ -74,7 +110,7 @@ void get_line() {
 	char buffer[1048576];
 	char* point;
 	int num = 0;
-	fread(buffer, 1, 1048576,file);
+	fread(buffer, 1, 1048576, file);
 	point = buffer;
 	//while ((int)point!=-1) {
 	//	printf("%s", point);

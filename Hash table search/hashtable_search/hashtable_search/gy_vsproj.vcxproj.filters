@@ -46,5 +46,11 @@
     <ClInclude Include="hash.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="gy.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="yn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

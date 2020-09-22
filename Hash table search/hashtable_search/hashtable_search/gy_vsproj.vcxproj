@@ -151,8 +151,10 @@
     <Text Include="string.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gy.h" />
     <ClInclude Include="hash.h" />
     <ClInclude Include="struct.h" />
+    <ClInclude Include="yn.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
