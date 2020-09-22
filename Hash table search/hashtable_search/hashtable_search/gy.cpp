@@ -1,4 +1,14 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+﻿/**********************************************************************
+*
+* 文件名称：gy.cpp
+* 内容摘要：计算机应用编程实验-实验1-gaooyao的任务函数
+* 作    者：gaooyao
+* 仓库地址：https://github.com/Jahn1998/Exercises-for-Programming
+* 项目日期：2020.9
+*
+**********************************************************************/
+
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
