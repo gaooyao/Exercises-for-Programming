@@ -32,7 +32,6 @@ char str[99] = { 0 };	//临时字符串，用于存放从文件扫描的字符�
 
 int main() {
 
-
 	/* 打开用到的文件 */
 	start = clock();
 	printf("open the needle file...");
@@ -98,5 +97,6 @@ int main() {
 	fclose(string_file);
 	fclose(dict_file);
 	fclose(result_file);
+	system("pause");
 	return 0;
 }

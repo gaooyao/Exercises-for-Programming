@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "struct.h"
 
 /*
@@ -43,4 +44,33 @@ HashNode* create_new_node(char* str) {
 		printf("create node fail!");
 		system("stop");
 	}
+}
+
+void get_line() {
+	clock_t start, end;
+	char str[99];
+	FILE* file;
+	file = fopen("dict.txt", "r");
+	start = clock();
+	
+	/*while (fscanf(file, "%s", str) != -1) {
+
+	}*/
+
+	char buffer[1048576];
+	char* point;
+	int num = 0;
+	fread(buffer, 1, 1048576,file);
+	point = buffer;
+	while ((int)point!=-1) {
+		printf("%s", point);
+
+	}
+
+	/*fscanf((FILE*)buffer, "%s", str);
+	printf("%s", str);*/
+
+	end = clock();
+	printf("%f", (float)(end - start) / CLOCKS_PER_SEC);
+	fclose(file);
 }
