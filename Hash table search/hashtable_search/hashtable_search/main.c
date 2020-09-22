@@ -73,13 +73,13 @@ int main() {
 	while (fscanf(dict_file, "%s", str) != -1) {
 		total_line++;
 		if (list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff]) {	//粗过滤，若被找字符串的前三个字节未在字典中出现过，则直接跳过
-			//前三个字节出现过，需要计算hash值精确查找
+			//前三个字节出现过，需要进hash表精确查找
 			hash_line++;
 			int hash_key = get_hash(str);
 			HashNode* node_pointer = &(hash_table[hash_key]);	//创建指针指向hash表中对应位置的首节点
 			while (node_pointer) {
 				if (!strcmp(node_pointer->str, str)) {	//文件读取到的字符串与指针指向节点的字符串对比，若相同则说明此字符串出现过，搜索成功
-					//查找成功时计数并保存到输出文件
+					//查找成功，计数并保存到输出文件
 					success_line++;
 					output_result(result_file, str);
 					break;

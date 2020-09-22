@@ -56,9 +56,10 @@ HashNode* create_new_node(char* str) {
 	}
 }
 
+static char str[99];
 void get_line() {
 	clock_t start, end;
-	char str[99];
+	
 	FILE* file;
 	file = fopen("dict.txt", "r");
 	start = clock();
