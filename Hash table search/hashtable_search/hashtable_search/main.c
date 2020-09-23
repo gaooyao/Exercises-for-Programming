@@ -1,4 +1,3 @@
-
 /**********************************************************************
 *
 * 文件名称：main.cpp
@@ -23,29 +22,27 @@
 /* 变量的初始化 */
 clock_t start, end;		//时间变量，用于统计运行时间
 HashNode hash_table[23767] = { "",NULL };	//主Hash表
-char list[256][256][256] = { 0 };	//一个三维数组，通过对比字符串的前三个字节达到粗过滤，默认全为0
-FILE* string_file = NULL;	//string.txt file handler
-FILE* dict_file = NULL;		//dict.txt file handler
+char list[256][256][256] = { 0 };	//一个三维数组，通过对比s_file字符串的前三个字节达到粗过滤，默认全为0
+FileHandler* string_file;	//string.txt file handler
+FileHandler* dict_file;		//dict.txt file handler	
 FILE* result_file = NULL;	//result.txt file handler
-static char str[99] = { 0 };	//临时字符串，用于存放从文件扫描的字符串
+char* str;
 
 
 int main() {
 
 	/* 打开用到的文件 */
 	start = clock();
-	printf("open the needle file...");
-	string_file = open_file("string.txt", "r");
-	dict_file = open_file("dict.txt", "r");
+	string_file = open_file_b("string.txt", "r");
+	dict_file = open_file_b("dict.txt", "r");
 	result_file = open_file("result.txt", "w");
 	end = clock();
 	printf("open file success,spent %f second.\n", (float)(end - start) / CLOCKS_PER_SEC);
 
-
 	/* 根据string.txt构建hash表 */
 	printf("build the hash table now...");
 	int ct_num = 0;		//变量ct记录发生冲突次数
-	while (fscanf(string_file, "%s", str) != -1) {
+	while (read_line(string_file, &str)) {
 		list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff] = (char)1;	//此字符串的前三个字节出现，在三维数组中对应位置标记为1
 		int hash_key = get_hash(str);
 		if (!strlen(hash_table[hash_key].str)) {	//若hash表中对应位置的node为空，则把其文本内容设置为当前字符串
@@ -64,13 +61,12 @@ int main() {
 	start = clock();
 	printf("构建hash表完成，用时%f秒，发生冲突%d次\n", (float)(start - end) / CLOCKS_PER_SEC, ct_num);
 
-
 	/* 开始搜索，依次取dist.txt的每一行，在构建好的hash表中搜索 */
 	printf("开始搜索...\n");
 	int total_line = 0;		//总行数
 	int hash_line = 0;		//需要计算hash值的行数
 	int success_line = 0;	//成功在hash表中找到的行数
-	while (fscanf(dict_file, "%s", str) != -1) {
+	while (read_line(dict_file, &str)) {
 		total_line++;
 		if (list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff]) {	//粗过滤，若被找字符串的前三个字节未在字典中出现过，则直接跳过
 			//前三个字节出现过，需要进hash表精确查找
@@ -91,11 +87,10 @@ int main() {
 	end = clock();
 	printf("搜索完成，共用时%f秒。\n", (float)(end - start) / CLOCKS_PER_SEC);
 
-
 	/* 搜索任务完成，显示搜索结果并退出 */
 	printf("任务完成，一共 %d 行，首次过滤后剩余 %d 行，搜索到 %d 行。\n", total_line, hash_line, success_line);
-	fclose(string_file);
-	fclose(dict_file);
+	close_file(string_file);
+	close_file(dict_file);
 	fclose(result_file);
 	system("pause");
 	return 0;

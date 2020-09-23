@@ -13,19 +13,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdarg.h>
 #include "struct.h"
 
-#define FILE_BUFFER_SIZE = 1048576;
+unsigned int FILE_BUFFER_SIZE = 1048576;	//文件缓冲区大小，单位字节
 
+/* 文件操作Handler,增加文件缓冲区加快读写速度 */
 typedef struct FileHandler {
-	FILE* file;
-	char file_name[99];
-	int open_status;		//值为0时为关闭状态，1为read模式，2write模式
-	int point;
-	unsigned int buffer_size;
-	char* buffer;
-	struct FileHandler* next;
+	FILE* file;		//被操作的文件指针
+	char file_name[99];		//文件名
+	int open_status;		//打开状态，为0时为关闭，1为read模式，2write模式
+	int point;//指向在当前缓冲区中的读写位置
+	unsigned int buffer_size;//文件缓冲区的大小
+	char* buffer;//文件缓冲区
 }FileHandler;
 
 
@@ -73,8 +72,13 @@ HashNode* create_new_node(char* str) {
 	return new_node;
 }
 
-
-FileHandler* open_fileb(char* file_name, char* open_type, ...) {
+/*
+* 函数名称：open_fileb
+* 函数功能：负责根据给定内容创建新的hash节点
+* 参数：	str：新创建节点的文本内容
+* 返回值：HashNode指针
+*/
+FileHandler* open_file_b(char* file_name, char* open_type, ...) {
 	/* 创建FileHandler */
 	FileHandler* file_handler = (FileHandler*)malloc(sizeof(FileHandler));
 	if (!file_handler) {
@@ -89,28 +93,34 @@ FileHandler* open_fileb(char* file_name, char* open_type, ...) {
 		return NULL;
 	}
 	file_handler->file = _file;
+
 	/* 创建文件缓冲buffer */
-	va_list valist;
-	va_start(valist, file_name, open_status);
-	file_handler->buffer_size = va_arg(valist, int);
-	file_handler->buffer_size = file_handler->buffer_size > 0 ? file_handler->buffer_size : 1048576;
-	va_end(valist);
-	/* FileHandler属性初始化 */
+	file_handler->buffer_size = FILE_BUFFER_SIZE;
 	file_handler->buffer = (char*)malloc(file_handler->buffer_size);
-	if (!file_handler->buffer)fclose(file_handler->file); return 0;	//分配内存失败
+	if (!file_handler->buffer) {
+		fclose(file_handler->file); return 0;	//分配内存失败
+	}
+
+	/* FileHandler属性初始化 */
 	strcpy(file_handler->file_name, file_name);
 	file_handler->open_status = (open_type == "r" ? 1 : 2);
 	file_handler->point = -1;
-	file_handler->next = NULL;
 	return file_handler;
 }
 
-int read_line(FileHandler* file_handler, char* str) {
-	if (file_handler->open_status !=1) return 0;	//打开模式为写入时不允许读取
+/*
+* 函数名称：create_new_node
+* 函数功能：负责根据给定内容创建新的hash节点
+* 参数：	str：新创建节点的文本内容
+* 返回值：HashNode指针
+*/
+int read_line(FileHandler* file_handler, char** str) {
+	//TODO:已知bug：若文件结尾为一空行则不会输出
+	if (file_handler->open_status != 1) return 0;	//打开模式为写入时不允许读取
 	int old_point = file_handler->point;
 	do {
 		//如果已读到文件末尾则返回
-		if (file_handler->point != -1 && file_handler->buffer[file_handler->point] == -1)return 0;
+		if (file_handler->point != -1 && *(file_handler->buffer + file_handler->point) == -1)return 0;
 
 		//根据当前指针判断是否需要读入新数据
 		int is_read_new_data = 0;
@@ -126,17 +136,17 @@ int read_line(FileHandler* file_handler, char* str) {
 			}
 		}
 		//如果buffer内不足一行，则读入新数据
-		if (file_handler->point + 1 > file_handler->buffer_size) {
+		if (file_handler->point + 1 >= file_handler->buffer_size) {
 			//copy buffer尾部数据至头部
-			int cope_f = 0;
+			int copy_num = 0;
 			while (old_point < file_handler->buffer_size) {
-				file_handler->buffer[cope_f] = file_handler->buffer[old_point];
-				cope_f++;
+				*(file_handler->buffer + copy_num) = *(file_handler->buffer + old_point + 1);
+				copy_num++;
 				old_point++;
 			}
 			//读入新数据
 			int read_num;
-			read_num = fread(file_handler->buffer + cope_f + 1, 1, file_handler->buffer_size - cope_f - 1, file_handler->file);
+			read_num = fread((char*)(file_handler->buffer + copy_num), 1, file_handler->buffer_size - copy_num, file_handler->file);
 			if (!read_num) {
 				return 0;
 			}
@@ -148,7 +158,7 @@ int read_line(FileHandler* file_handler, char* str) {
 		if (is_read_new_data) {
 			file_handler->point = 0;
 			//判断读入的新数据是否可用
-			while (file_handler->buffer[file_handler->point] && file_handler->buffer[file_handler->point] != -1) {
+			while (*(file_handler->buffer + file_handler->point) != 10 && *(file_handler->buffer + file_handler->point) != 0 && *(file_handler->buffer + file_handler->point) != -1) {
 				file_handler->point++;
 				if (file_handler->point > file_handler->buffer_size) {
 					//读取到的整个buffer内容少于一行，则超过最大处理大小
@@ -156,16 +166,23 @@ int read_line(FileHandler* file_handler, char* str) {
 					return 0;
 				}
 			}
-			str = &(file_handler->buffer[0]);
+			*(file_handler->buffer + file_handler->point) = 0;//断行
+			(*str) = &(file_handler->buffer[0]);
 			return 1;
 		}
 		file_handler->point++;
-	} while (file_handler->buffer[file_handler->point]);
-
-	str = &(file_handler->buffer[old_point]);
+	} while (*(file_handler->buffer + file_handler->point) != '\n');
+	*(file_handler->buffer + file_handler->point) = 0;//断行
+	(*str) = file_handler->buffer + old_point + 1;
 	return 1;
 }
 
+/*
+* 函数名称：create_new_node
+* 函数功能：负责根据给定内容创建新的hash节点
+* 参数：	str：新创建节点的文本内容
+* 返回值：HashNode指针
+*/
 int write_line(FileHandler* file_handler, char* str) {
 	return 0;
 }
@@ -175,3 +192,17 @@ int close_file(FileHandler* file_handler) {
 	free(file_handler);
 	return 1;
 }
+
+
+
+//int n = 0;
+//FileHandler* file;
+//char* test_str = NULL;
+//file = open_fileb("dict.txt", "r");
+//while (read_line(file, &test_str)) {
+//	n++;
+//	if (n % 10000 == 0)
+//		printf("%d %s\n", n, test_str);
+//}
+//system("pause");
+//return 0;
