@@ -15,7 +15,8 @@
 #include <time.h>
 #include "struct.h"
 
-unsigned int FILE_BUFFER_SIZE = 1048576;	//文件缓冲区大小，单位字节
+
+
 
 /* 文件操作Handler,增加文件缓冲区加快读写速度 */
 typedef struct FileHandler {
@@ -79,6 +80,9 @@ HashNode* create_new_node(char* str) {
 * 返回值：HashNode指针
 */
 FileHandler* open_file_b(char* file_name, char* open_type, ...) {
+    
+    int FILE_BUFFER_SIZE = 1048576;    //文件缓冲区大小，单位字节
+    
 	/* 创建FileHandler */
 	FileHandler* file_handler = (FileHandler*)malloc(sizeof(FileHandler));
 	if (!file_handler) {
@@ -98,12 +102,13 @@ FileHandler* open_file_b(char* file_name, char* open_type, ...) {
 	file_handler->buffer_size = FILE_BUFFER_SIZE;
 	file_handler->buffer = (char*)malloc(file_handler->buffer_size);
 	if (!file_handler->buffer) {
-		fclose(file_handler->file); return 0;	//分配内存失败
+		fclose(file_handler->file);
+        return 0;	//分配内存失败
 	}
 
 	/* FileHandler属性初始化 */
 	strcpy(file_handler->file_name, file_name);
-	file_handler->open_status = (open_type == "r" ? 1 : 2);
+	file_handler->open_status = (open_type == "r" ? 1 : 2);//三元表达式
 	file_handler->point = -1;
 	return file_handler;
 }
@@ -114,10 +119,11 @@ FileHandler* open_file_b(char* file_name, char* open_type, ...) {
 * 参数：	str：新创建节点的文本内容
 * 返回值：HashNode指针
 */
+
 int read_line(FileHandler* file_handler, char** str) {
 	//TODO:已知bug：若文件结尾为一空行则不会输出
 	if (file_handler->open_status != 1) return 0;	//打开模式为写入时不允许读取
-	int old_point = file_handler->point;
+	int old_point = file_handler->point;//记录当前指针位置
 	do {
 		//如果已读到文件末尾则返回
 		if (file_handler->point != -1 && *(file_handler->buffer + file_handler->point) == -1)return 0;
@@ -161,23 +167,26 @@ int read_line(FileHandler* file_handler, char** str) {
 			while (*(file_handler->buffer + file_handler->point) != 10 && *(file_handler->buffer + file_handler->point) != 0 && *(file_handler->buffer + file_handler->point) != -1) {
 				file_handler->point++;
 				if (file_handler->point > file_handler->buffer_size) {
-					//读取到的整个buffer内容少于一行，则超过最大处理大小
+					//读取到的整个buffer内容少于一行，则超过最大处理大小//-1结束//10换行符
 					system("stop");
 					return 0;
 				}
 			}
+            //读新数据
 			*(file_handler->buffer + file_handler->point) = 0;//断行
-			(*str) = &(file_handler->buffer[0]);
+            (*str) = &(file_handler->buffer[0]);
 			return 1;
+            //
 		}
 		file_handler->point++;
 	} while (*(file_handler->buffer + file_handler->point) != '\n');
+    //没有读入新数据
 	*(file_handler->buffer + file_handler->point) = 0;//断行
-	(*str) = file_handler->buffer + old_point + 1;
+    (*str) = (file_handler->buffer + old_point + 1);
 	return 1;
 }
 
-/*
+/*r
 * 函数名称：create_new_node
 * 函数功能：负责根据给定内容创建新的hash节点
 * 参数：	str：新创建节点的文本内容

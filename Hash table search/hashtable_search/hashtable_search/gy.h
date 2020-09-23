@@ -12,9 +12,8 @@
 
 FILE* open_file(char* file_name, char* open_type);
 HashNode* create_new_node(char* str);
-
 FileHandler* open_fileb(char* file_name,char* open_type);
-int read_line(FileHandler* file_handler, char* str);
+int read_line(FileHandler* file_handler, char** str);
 int write_line(FileHandler* file_handler, char* str);
 int close_file(FileHandler* file_handler);
 
