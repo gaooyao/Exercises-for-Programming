@@ -13,8 +13,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdarg.h>
 #include "struct.h"
 
+#define FILE_BUFFER_SIZE = 1048576;
+
+typedef struct FileHandler {
+	FILE* file;
+	char file_name[99];
+	int open_status;		//值为0时为关闭状态，1为read模式，2write模式
+	int point;
+	unsigned int buffer_size;
+	char* buffer;
+	struct FileHandler* next;
+}FileHandler;
 
 
 /*
@@ -62,65 +74,104 @@ HashNode* create_new_node(char* str) {
 }
 
 
-FileHandler* open_fileb(char* file_name, char* open_type) {
+FileHandler* open_fileb(char* file_name, char* open_type, ...) {
+	/* 创建FileHandler */
+	FileHandler* file_handler = (FileHandler*)malloc(sizeof(FileHandler));
+	if (!file_handler) {
+		printf("open %s fail!", file_name);
+		return NULL;
+	}
+	/* 打开文件 */
 	FILE* _file = (FILE*)malloc(sizeof(FILE));
 	_file = fopen(file_name, open_type);
 	if (!_file) {
 		printf("open %s fail!", file_name);
 		return NULL;
 	}
-	FileHandler* file_handler = (FileHandler*)malloc(sizeof(FileHandler));
-	if (!file_handler) {
-		printf("open %s fail!", file_name);
-		return NULL;
-	}
 	file_handler->file = _file;
+	/* 创建文件缓冲buffer */
+	va_list valist;
+	va_start(valist, file_name, open_status);
+	file_handler->buffer_size = va_arg(valist, int);
+	file_handler->buffer_size = file_handler->buffer_size > 0 ? file_handler->buffer_size : 1048576;
+	va_end(valist);
+	/* FileHandler属性初始化 */
+	file_handler->buffer = (char*)malloc(file_handler->buffer_size);
+	if (!file_handler->buffer)fclose(file_handler->file); return 0;	//分配内存失败
 	strcpy(file_handler->file_name, file_name);
-	file_handler->open_type = (open_type == "r" ? 0 : 1);
+	file_handler->open_status = (open_type == "r" ? 1 : 2);
 	file_handler->point = -1;
 	file_handler->next = NULL;
 	return file_handler;
 }
 
 int read_line(FileHandler* file_handler, char* str) {
-	return 0;
+	if (file_handler->open_status !=1) return 0;	//打开模式为写入时不允许读取
+	int old_point = file_handler->point;
+	do {
+		//如果已读到文件末尾则返回
+		if (file_handler->point != -1 && file_handler->buffer[file_handler->point] == -1)return 0;
+
+		//根据当前指针判断是否需要读入新数据
+		int is_read_new_data = 0;
+		//如果buffer为空，则读入新buffer
+		if (file_handler->point == -1) {
+			int read_num;
+			read_num = fread(file_handler->buffer, 1, file_handler->buffer_size, file_handler->file);
+			if (!read_num) {
+				return 0;
+			}
+			else {
+				is_read_new_data = 1;
+			}
+		}
+		//如果buffer内不足一行，则读入新数据
+		if (file_handler->point + 1 > file_handler->buffer_size) {
+			//copy buffer尾部数据至头部
+			int cope_f = 0;
+			while (old_point < file_handler->buffer_size) {
+				file_handler->buffer[cope_f] = file_handler->buffer[old_point];
+				cope_f++;
+				old_point++;
+			}
+			//读入新数据
+			int read_num;
+			read_num = fread(file_handler->buffer + cope_f + 1, 1, file_handler->buffer_size - cope_f - 1, file_handler->file);
+			if (!read_num) {
+				return 0;
+			}
+			else {
+				is_read_new_data = 1;
+			}
+		}
+		//若读入新数据则重置buffer指针
+		if (is_read_new_data) {
+			file_handler->point = 0;
+			//判断读入的新数据是否可用
+			while (file_handler->buffer[file_handler->point] && file_handler->buffer[file_handler->point] != -1) {
+				file_handler->point++;
+				if (file_handler->point > file_handler->buffer_size) {
+					//读取到的整个buffer内容少于一行，则超过最大处理大小
+					system("stop");
+					return 0;
+				}
+			}
+			str = &(file_handler->buffer[0]);
+			return 1;
+		}
+		file_handler->point++;
+	} while (file_handler->buffer[file_handler->point]);
+
+	str = &(file_handler->buffer[old_point]);
+	return 1;
 }
+
 int write_line(FileHandler* file_handler, char* str) {
 	return 0;
 }
 int close_file(FileHandler* file_handler) {
-	return 0;
-}
-
-void get_line(char* file_name) {
-
-
-
-
-	clock_t start, end;
-
-	FILE* file;
-	file = fopen("dict.txt", "r");
-	start = clock();
-
-	/*while (fscanf(file, "%s", str) != -1) {
-
-	}*/
-
-	char buffer[1048576];
-	char* point;
-	int num = 0;
-	fread(buffer, 1, 1048576, file);
-	point = buffer;
-	//while ((int)point!=-1) {
-	//	printf("%s", point);
-
-//	}
-
-	/*fscanf((FILE*)buffer, "%s", str);
-	printf("%s", str);*/
-
-	end = clock();
-	printf("%f", (float)(end - start) / CLOCKS_PER_SEC);
-	fclose(file);
+	free(file_handler->buffer);
+	file_handler->open_status = 0;
+	free(file_handler);
+	return 1;
 }
