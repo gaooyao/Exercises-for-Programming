@@ -8,7 +8,10 @@
 #ifndef gy_h
 #define gy_h
 
+
 #include "gy.cpp"
+
+
 
 FILE* open_file(char* file_name, char* open_type);
 HashNode* create_new_node(char* str);

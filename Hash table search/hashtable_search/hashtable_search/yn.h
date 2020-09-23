@@ -9,6 +9,6 @@
 #define yn_h
 #include "yn.cpp"
 int get_hash(char* str);
-void output_result(FILE* file, char* str);
+void output_result(FileHandler* file, char* str);
 
 #endif /* yn_h */

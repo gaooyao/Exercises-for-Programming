@@ -25,7 +25,7 @@ HashNode hash_table[23767] = { "",NULL };	//主Hash表
 char list[256][256][256] = { 0 };	//一个三维数组，通过对比s_file字符串的前三个字节达到粗过滤，默认全为0
 FileHandler* string_file;	//string.txt file handler
 FileHandler* dict_file;		//dict.txt file handler	
-FILE* result_file = NULL;	//result.txt file handler
+FileHandler* result_file;	//result.txt file handler
 char* str;
 
 
@@ -35,7 +35,7 @@ int main() {
 	start = clock();
 	string_file = open_file_b("string.txt", "r");
 	dict_file = open_file_b("dict.txt", "r");
-	result_file = open_file("result.txt", "w");
+	result_file = open_file_b("result.txt", "w");
 	end = clock();
 	printf("File Opened successfully. It takes %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
 
@@ -91,7 +91,7 @@ int main() {
 	printf("Task Completed. It is included %d lines. %d lines remaining after first filtering，%d lines have been found.\n", total_line, hash_line, success_line);//任务完成，一共 %d 行，首次过滤后剩余 %d 行，搜索到 %d 行。
 	close_file(string_file);
 	close_file(dict_file);
-	fclose(result_file);
+	close_file(result_file);
 	system("pause");
 	return 0;
 }
