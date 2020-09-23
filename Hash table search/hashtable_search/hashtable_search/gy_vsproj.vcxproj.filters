@@ -15,16 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gy.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="yn.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="hash.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="gy.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="yn.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
