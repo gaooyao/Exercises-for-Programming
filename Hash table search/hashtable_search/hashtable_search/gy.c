@@ -15,6 +15,7 @@
 #include <time.h>
 
 #include "struct.h"
+#include "gy.h"
 
 int FILE_BUFFER_SIZE = 1048576;    //文件缓冲区大小，单位字节
 

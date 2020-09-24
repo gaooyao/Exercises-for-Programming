@@ -3,6 +3,8 @@
 #include "struct.h"
 #include "hash.h"
 
+#include "yn.h"
+
 
 int get_hash(char* str) {
     unsigned int BKDRHash(char* str);
