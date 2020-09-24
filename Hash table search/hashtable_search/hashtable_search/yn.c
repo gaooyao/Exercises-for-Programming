@@ -5,7 +5,6 @@
 
 #include "yn.h"
 
-
 int get_hash(char* str) {
     unsigned int BKDRHash(char* str);
 	return BKDRHash(str) % 23767;
@@ -13,20 +12,31 @@ int get_hash(char* str) {
 
 
 int write_line(FileHandler* file_handler, char* str) {
-	/*
-	//ÈôÎÄ¼ş´ò¿ªÀàĞÍ²»ÊÇĞ´ÈëÀàĞÍ£¬Ôò²»ÔÊĞíĞ´Èë
+    int write_num=1;
+    //æ‰“å¼€æ¨¡å¼ä¸ºè¯»å…¥æ—¶ä¸å…è®¸å†™å…¥
 	if(file_handler->open_status!=2){
 		return 0;
 	}
-	//°Ñ×Ö·û´®Ğ´Èë»º³åÇøÖĞ
-	while (*str != 0) {
+	
+    //å†™å…¥ä¸€è¡Œç»“æœ
+    //char y=99;
+    
+    //ä¸èƒ½å¯¹å¯¹è±¡ç›´æ¥æ“ä½œ
+ 
+    //å½“resultçš„æ•°æ®ä¸ä¸º0æ—¶ï¼Œresultå’Œå†™å…¥çš„åœ°å€çš„æŒ‡é’ˆå‘åç§»
+	while(*str != 0) {
 		file_handler->point++;
 		*(file_handler->buffer + file_handler->point) = *str;
 		str++;
 	}
-	//²éÈë»»ĞĞ·û
-	file_handler->point++;
-	*(file_handler->buffer + file_handler->point) = 10;
-	*/
+	//ç½®å…¥ç©ºè¡Œç¬¦
+    file_handler->point++;
+    *(file_handler->buffer + file_handler->point) = 10;
+    write_num++;
+
+    //file_handler->point++;
+    //*str ++;
+    //*(file_handler->buffer + file_handler->point)=* str;
+
 	return 0;
 }
