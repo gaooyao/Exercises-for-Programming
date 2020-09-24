@@ -162,7 +162,7 @@ int read_line(FileHandler* file_handler, char** str) {
 int close_file(FileHandler* file_handler) {
 	//若文件为写入方式打开，则把缓冲区内容写入文件
 	if (file_handler->open_status == 2 && file_handler->point != -1) {
-		fwrite(file_handler->buffer, 1, file_handler->point, file_handler->file);
+		fwrite(file_handler->buffer, file_handler->point, 1, file_handler->file);
 	}
 	//关闭文件并释放空间
 	fclose(file_handler->file);
