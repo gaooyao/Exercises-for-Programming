@@ -7,8 +7,8 @@
 
 #ifndef yn_h
 #define yn_h
-#include "yn.cpp"
+
 int get_hash(char* str);
-void output_result(FileHandler* file, char* str);
+int write_line(FileHandler* file_handler, char* str);
 
 #endif /* yn_h */

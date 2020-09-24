@@ -140,10 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="gy.cpp" />
+    <ClCompile Include="gy.c" />
     <ClCompile Include="hash.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="yn.cpp" />
+    <ClCompile Include="yn.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dict.txt" />

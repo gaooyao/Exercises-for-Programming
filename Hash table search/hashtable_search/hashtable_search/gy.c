@@ -8,49 +8,16 @@
 *
 **********************************************************************/
 
-
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 #include "struct.h"
+#include "gy.h"
 
-
-
-
-
-/* 文件操作Handler,增加文件缓冲区加快读写速度 */
-typedef struct FileHandler {
-	FILE* file;		//被操作的文件指针
-	char file_name[99];		//文件名
-	int open_status;		//打开状态，为0时为关闭，1为read模式，2write模式
-	int point;//指向在当前缓冲区中的读写位置
-	unsigned int buffer_size;//文件缓冲区的大小
-	char* buffer;//文件缓冲区
-}FileHandler;
-
-
-/*
-* 函数名称：open_file
-* 函数功能：负责打开文件
-* 参数：	file_name：要打开文件的名称
-*		open_type：文件的操作类型，如"w"
-* 返回值：对应文件的指针
-*/
-FILE* open_file(char* file_name, char* open_type) {
-	FILE* file = (FILE*)malloc(sizeof(FILE));
-	file = fopen(file_name, open_type);		//打开对于文件
-	if (!file) {	//若打开失败则显示错误信息并退出程序
-		printf("open %s fail!", file_name);
-		system("stop");
-	}
-	else {
-		return file;
-	}
-	return file;
-}
+int FILE_BUFFER_SIZE = 1048576;    //文件缓冲区大小，单位字节
 
 /*
 * 函数名称：create_new_node
@@ -77,15 +44,13 @@ HashNode* create_new_node(char* str) {
 }
 
 /*
-* 函数名称：open_fileb
-* 函数功能：负责根据给定内容创建新的hash节点
-* 参数：	str：新创建节点的文本内容
-* 返回值：HashNode指针
+* 函数名称：open_file
+* 函数功能：根据给定属性创建新的FileHandler对象
+* 参数：	file_name：要打开的文件名
+*		open_type:文件打开类型，如"r","w"
+* 返回值：FileHandler指针
 */
-FileHandler* open_file_b(char* file_name, char* open_type, ...) {
-    
-    int FILE_BUFFER_SIZE = 1048576;    //文件缓冲区大小，单位字节
-    
+FileHandler* open_file(char* file_name, char* open_type) {
 	/* 创建FileHandler */
 	FileHandler* file_handler = (FileHandler*)malloc(sizeof(FileHandler));
 	if (!file_handler) {
@@ -106,7 +71,7 @@ FileHandler* open_file_b(char* file_name, char* open_type, ...) {
 	file_handler->buffer = (char*)malloc(file_handler->buffer_size);
 	if (!file_handler->buffer) {
 		fclose(file_handler->file);
-        return 0;	//分配内存失败
+		return 0;	//分配内存失败
 	}
 
 	/* FileHandler属性初始化 */
@@ -117,14 +82,14 @@ FileHandler* open_file_b(char* file_name, char* open_type, ...) {
 }
 
 /*
-* 函数名称：create_new_node
-* 函数功能：负责根据给定内容创建新的hash节点
-* 参数：	str：新创建节点的文本内容
-* 返回值：HashNode指针
+* 函数名称：read_line
+* 函数功能：从文件中读取一行文本
+* 参数：	file_handler：被读取的FileHandler对象
+*		str：存放被读取文本的地址
+* 返回值：int，1为读取成功，0为读取失败
+* TODO:已知bug：若文件结尾为一空行则不会被输出
 */
-
 int read_line(FileHandler* file_handler, char** str) {
-	//TODO:已知bug：若文件结尾为一空行则不会输出
 	if (file_handler->open_status != 1) return 0;	//打开模式为写入时不允许读取
 	int old_point = file_handler->point;//记录当前指针位置
 	do {
@@ -175,30 +140,32 @@ int read_line(FileHandler* file_handler, char** str) {
 					return 0;
 				}
 			}
-            //读新数据
+			//数据读取成功，str指针指向字符串开头并返回
 			*(file_handler->buffer + file_handler->point) = 0;//断行
-            (*str) = &(file_handler->buffer[0]);
+			(*str) = &(file_handler->buffer[0]);
 			return 1;
-            //
 		}
 		file_handler->point++;
-	} while (*(file_handler->buffer + file_handler->point) != '\n');
-    //没有读入新数据
+	} while (*(file_handler->buffer + file_handler->point) != '\n');//point指针循环后移，直到遇到换行符则停止
+	//没有读入新数据，但已找到被读文本的开头和结尾
 	*(file_handler->buffer + file_handler->point) = 0;//断行
-    (*str) = (file_handler->buffer + old_point + 1);
+	(*str) = (file_handler->buffer + old_point + 1);
 	return 1;
 }
 
 /*r
-* 函数名称：create_new_node
-* 函数功能：负责根据给定内容创建新的hash节点
-* 参数：	str：新创建节点的文本内容
-* 返回值：HashNode指针
+* 函数名称：close_file
+* 函数功能：关闭文件，释放FileHandler对象
+* 参数：	file_handler：被关闭的FileHandler对象
+* 返回值：int,是否关闭成功
 */
-int write_line(FileHandler* file_handler, char* str) {
-	return 0;
-}
 int close_file(FileHandler* file_handler) {
+	//若文件为写入方式打开，则把缓冲区内容写入文件
+	if (file_handler->open_status == 2 && file_handler->point != -1) {
+		fwrite(file_handler->buffer, 1, file_handler->point, file_handler->file);
+	}
+	//关闭文件并释放空间
+	fclose(file_handler->file);
 	free(file_handler->buffer);
 	file_handler->open_status = 0;
 	free(file_handler);
