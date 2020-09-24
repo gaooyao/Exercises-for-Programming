@@ -11,12 +11,12 @@ int get_hash(char* str) {
 
 
 int write_line(FileHandler* file_handler, char* str) {
-	while (*str != 0) {
+	/*while (*str != 0) {
 		file_handler->point++;
 		*(file_handler->buffer + file_handler->point) = *str;
 		str++;
 	}
 	file_handler->point++;
-	*(file_handler->buffer + file_handler->point) = 10;
+	*(file_handler->buffer + file_handler->point) = 10;*/
 	return 0;
 }
