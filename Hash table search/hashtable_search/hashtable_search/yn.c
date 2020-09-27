@@ -15,28 +15,31 @@ int get_hash(char* str) {
 int write_line(FileHandler* file_handler, char* str) {
 
 
-	//若文件打开类型不是写入类型，则不允许写入
+	//if the file is not under the writing status
 	if (file_handler->open_status != 2) {
 		return 0;
 	}
 	file_handler->point++;
+    
+    //di
 	*(file_handler->buffer + file_handler->point) = 0xB5;
 	file_handler->point++;
 	*(file_handler->buffer + file_handler->point) = 0xDA;
 	
+    //convert the numbers to be auto-changed
+	char target[20];//we have 6306 numbers
+	static int num = 1;//numbers will change
+	char* t = target;
+	sprintf(target,"%d",num);
 
-	char bb[20];
-	static int b = 1;
-	char* d = bb;
-	sprintf(bb,"%d",b);
-
-	while (*d != 0) {
+	while (*t != 0) {
 		file_handler->point++;
-		*(file_handler->buffer + file_handler->point) = *d;
-		d++ ;
+		*(file_handler->buffer + file_handler->point) = *t;
+        t++ ;
 	}
-	b++;
+    num++;
 
+    //hang:
 	file_handler->point++;
 	*(file_handler->buffer + file_handler->point) = 0xD0;
 	file_handler->point++;
@@ -44,7 +47,8 @@ int write_line(FileHandler* file_handler, char* str) {
 	file_handler->point++;
 	*(file_handler->buffer + file_handler->point) = 0x3A;
 	//把字符串写入缓冲区中
-	while (*str != 0) {
+	
+    while (*str != 0) {
 
 		file_handler->point++;
 		*(file_handler->buffer + file_handler->point) = *str;

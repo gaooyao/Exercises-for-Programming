@@ -36,7 +36,7 @@
 		758993092518977F0098E839 /* hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
 		7589930A2518978C0098E839 /* string.txt */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text; path = string.txt; sourceTree = "<group>"; };
 		7589930B251897A20098E839 /* dict.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = dict.txt; sourceTree = "<group>"; };
-		759584F1251CABA300FF06B1 /* yn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = yn.c; sourceTree = "<group>"; wrapsLines = 1; };
+		759584F1251CABA300FF06B1 /* yn.c */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = sourcecode.c.c; lineEnding = 1; path = yn.c; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
