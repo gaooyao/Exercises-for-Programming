@@ -29,14 +29,14 @@
 		7514BF782517951600693EF9 /* hashtable_search */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hashtable_search; sourceTree = BUILT_PRODUCTS_DIR; };
 		7514BF7B2517951600693EF9 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		757EE69A2519F42500C148C4 /* struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = struct.h; sourceTree = "<group>"; };
-		757EE69B2519F42500C148C4 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
+		757EE69B2519F42500C148C4 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
 		757EE6A02519F8B400C148C4 /* gy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gy.h; sourceTree = "<group>"; };
 		757EE6A12519F8C600C148C4 /* yn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = yn.h; sourceTree = "<group>"; };
 		7583A56F251C8910005A097A /* gy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gy.c; sourceTree = "<group>"; };
 		758993092518977F0098E839 /* hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
 		7589930A2518978C0098E839 /* string.txt */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text; path = string.txt; sourceTree = "<group>"; };
 		7589930B251897A20098E839 /* dict.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = dict.txt; sourceTree = "<group>"; };
-		759584F1251CABA300FF06B1 /* yn.c */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.c; path = yn.c; sourceTree = "<group>"; wrapsLines = 0; };
+		759584F1251CABA300FF06B1 /* yn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = yn.c; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

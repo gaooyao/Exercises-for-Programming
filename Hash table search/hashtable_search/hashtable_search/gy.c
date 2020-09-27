@@ -116,7 +116,7 @@ int read_line(FileHandler* file_handler, char** str) {
 			while (old_point < file_handler->buffer_size) {
 				*(file_handler->buffer + copy_num) = *(file_handler->buffer + old_point + 1);
 				copy_num++;
-				old_point++;
+                old_point++;
 			}
 			//读入新数据
 			int read_num;
