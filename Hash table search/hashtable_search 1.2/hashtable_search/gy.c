@@ -73,7 +73,6 @@ FileHandler* open_file(char* file_name, char* open_type) {
 		fclose(file_handler->file);
 		return 0;	//分配内存失败
 	}
-
 	/* FileHandler属性初始化 */
 	strcpy(file_handler->file_name, file_name);
 	file_handler->open_status = (open_type == "r" ? 1 : 2);//三元表达式

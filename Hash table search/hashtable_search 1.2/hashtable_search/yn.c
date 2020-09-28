@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
 #include "struct.h"
 #include "hash.h"
 #include <math.h>
@@ -107,5 +108,13 @@ int num_k(int m, int n)
 /*
  */
 
-
+char* create_m(int m){
+    m=m/8+1;
+    char* new_m = (char*)malloc(m);
+    for(int i=0;i<m;i++)
+    {
+        *(new_m+i)=0;
+    };
+    return new_m;
+}
 

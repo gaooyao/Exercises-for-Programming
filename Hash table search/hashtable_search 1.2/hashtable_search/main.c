@@ -30,11 +30,13 @@ char* str;
 
 
 int main() {
+    char *new_m;
     int m,k;
     m=num_m(0.0000001,1270574);
     printf("m=%d\n",m);
     k=num_k(m,1270574);
     printf("k=%d\n",k);
+    new_m=create_m(m);
     return 0;
 	/* 打开用到的文件 */
 	start = clock();
