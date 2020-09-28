@@ -143,6 +143,7 @@
     <ClCompile Include="gy.c" />
     <ClCompile Include="hash.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="murmurhash.c" />
     <ClCompile Include="yn.c" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="gy.h" />
     <ClInclude Include="hash.h" />
+    <ClInclude Include="murmurhash.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="yn.h" />
   </ItemGroup>

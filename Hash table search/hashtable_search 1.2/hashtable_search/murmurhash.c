@@ -1,5 +1,10 @@
 ﻿#include <stdint.h>
 
+inline uint64_t _rotl64_self(uint64_t x, int8_t r)
+{
+	return (x << r) | (x >> (64 - r));
+}
+
 
 // Microsoft Visual Studio
 
@@ -10,7 +15,7 @@
 #include <stdlib.h>
 
 #define ROTL32(x,y)	_rotl(x,y)
-#define ROTL64(x,y)	_rotl64(x,y)
+#define ROTL64(x,y)	_rotl64_self(x,y)
 
 #define BIG_CONSTANT(x) (x)
 
