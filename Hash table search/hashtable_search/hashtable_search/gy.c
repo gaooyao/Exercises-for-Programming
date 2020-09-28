@@ -29,7 +29,7 @@ HashNode* create_new_node(char* str) {
 	HashNode* new_node = (HashNode*)malloc(sizeof(HashNode));	//创建空节点
 	if (new_node) {
 		//创建成功则给其赋值
-		new_node->str[0] = '\0';
+		new_node->str[0] = '\0';//default value
 		new_node->next = NULL;
 		strcpy(new_node->str, str);
 		return new_node;

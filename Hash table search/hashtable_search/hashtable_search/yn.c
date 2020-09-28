@@ -2,15 +2,28 @@
 #include <stdio.h>
 #include "struct.h"
 #include "hash.h"
-
+#include <math.h>
 #include "yn.h"
+
+/*
+ * the Name of this : get_hash
+ * the Function of this : Calculate the Hash Key
+ * Parameters : str : every str has its own Hash Key
+ * value of return : int, value of the Hash key
+*/
 
 int get_hash(char* str) {
 	unsigned int BKDRHash(char* str);
 	return BKDRHash(str) % 23767;
 }
 
-
+/*
+* the Name of this  : write_line
+* the Function of this : write the targeted lines into result.txt
+* Parameter 1 : FileHandler* file_handler : where to be exported
+* Parameter 2 : char* str : what to be exported
+* value of return : int, 0
+*/
 
 int write_line(FileHandler* file_handler, char* str) {
 
@@ -59,4 +72,7 @@ int write_line(FileHandler* file_handler, char* str) {
 	*(file_handler->buffer + file_handler->point) = 10;
 
 	return 0;
+
+    
 }
+

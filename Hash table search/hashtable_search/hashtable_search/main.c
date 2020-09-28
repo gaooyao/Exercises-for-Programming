@@ -42,7 +42,7 @@ int main() {
 	/* 根据string.txt构建hash表 */
 	printf("Building the hash table now...\n");
 	int ct_num = 0;		//变量ct记录发生冲突次数
-	while (read_line(string_file, &str) == 1) {
+    while (read_line(string_file, &str) == 1) {
 		list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff] = (char)1;	//此字符串的前三个字节出现，在三维数组中对应位置标记为1
 		int hash_key = get_hash(str);
 		if (!strlen(hash_table[hash_key].str)) {	//若hash表中对应位置的node为空，则把其文本内容设置为当前字符串
@@ -58,17 +58,17 @@ int main() {
 			node_pointer->next = new_node;		//最后一个node的next指针指向新创建的node
 		}
 	}
-	start = clock();
-	printf("Construction Completed, it takes %f seconds, conflicts occurred %d times\n", (float)(start - end) / CLOCKS_PER_SEC, ct_num);
+	start = clock();//
+	printf("Construction of Hash Completed, it takes %f seconds, conflicts occurred %d times\n", (float)(start - end) / CLOCKS_PER_SEC, ct_num);
 
-	/* 开始搜索，依次取dist.txt的每一行，在构建好的hash表中搜索 */
+	/* 开始搜索，依次取dict.txt的每一行，在构建好的hash表中搜索 */
 	printf("Start Searching...\n");
-	int total_line = 0;		//总行数
+	int total_line = 0;		//dict.txt文本的总行数
 	int hash_line = 0;		//需要计算hash值的行数
 	int success_line = 0;	//成功在hash表中找到的行数
 	while (read_line(dict_file, &str)) {
 		total_line++;
-		if (list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff]) {	//粗过滤，若被找字符串的前三个字节未在字典中出现过，则直接跳过
+        if (list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff]) {	//粗过滤，若被找字符串的前三个字节未在字典中出现过，则直接跳过
 			//前三个字节出现过，需要进hash表精确查找
 			hash_line++;
 			int hash_key = get_hash(str);
@@ -78,11 +78,12 @@ int main() {
 					//查找成功，计数并保存到输出文件
 					success_line++;
 					write_line(result_file, str);
-					break;
+					break;//终止所在层(while)的循环
 				}
 				node_pointer = node_pointer->next;	//若读取到的字符串与指针指向节点的字符串不相同则指针后移，直到最后还未成功匹配则查找失败
+                //？怎么判断 失败，失败后的具体操作有什么？
 			}
-		}
+		    }
 	}
 	end = clock();
 	printf("Searching Completed. It takes %f seconds. \n", (float)(end - start) / CLOCKS_PER_SEC);//搜索完成，共用时%f秒
