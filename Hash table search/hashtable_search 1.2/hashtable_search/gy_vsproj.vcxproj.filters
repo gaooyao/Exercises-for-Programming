@@ -27,6 +27,9 @@
     <ClCompile Include="yn.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="murmurhash.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dict.txt">
@@ -50,6 +53,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="yn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="murmurhash.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

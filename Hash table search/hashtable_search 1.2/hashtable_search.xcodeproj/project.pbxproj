@@ -27,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7511BB6A2524876F0030B34E /* dict.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dict.txt; sourceTree = "<group>"; };
 		7514BF782517951600693EF9 /* hashtable_search */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hashtable_search; sourceTree = BUILT_PRODUCTS_DIR; };
 		7514BF7B2517951600693EF9 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7527051B2522321D0068E853 /* murmurhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = murmurhash.h; sourceTree = "<group>"; };
@@ -37,8 +38,7 @@
 		757EE6A12519F8C600C148C4 /* yn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = yn.h; sourceTree = "<group>"; };
 		7583A56F251C8910005A097A /* gy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gy.c; sourceTree = "<group>"; };
 		758993092518977F0098E839 /* hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
-		7589930A2518978C0098E839 /* string.txt */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text; path = string.txt; sourceTree = "<group>"; };
-		7589930B251897A20098E839 /* dict.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = dict.txt; sourceTree = "<group>"; };
+		7589930A2518978C0098E839 /* string.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = string.txt; sourceTree = "<group>"; };
 		759584F1251CABA300FF06B1 /* yn.c */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = sourcecode.c.c; lineEnding = 1; path = yn.c; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
@@ -72,6 +72,7 @@
 		7514BF7A2517951600693EF9 /* hashtable_search */ = {
 			isa = PBXGroup;
 			children = (
+				7511BB6A2524876F0030B34E /* dict.txt */,
 				7527051C252232220068E853 /* murmurhash.c */,
 				7527051B2522321D0068E853 /* murmurhash.h */,
 				759584F1251CABA300FF06B1 /* yn.c */,
@@ -82,7 +83,6 @@
 				758993092518977F0098E839 /* hash.h */,
 				757EE69B2519F42500C148C4 /* hash.c */,
 				757EE6A12519F8C600C148C4 /* yn.h */,
-				7589930B251897A20098E839 /* dict.txt */,
 				7589930A2518978C0098E839 /* string.txt */,
 			);
 			path = hashtable_search;

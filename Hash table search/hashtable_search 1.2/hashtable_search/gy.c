@@ -184,3 +184,17 @@ int close_file(FileHandler* file_handler) {
 //}
 //system("pause");
 //return 0;
+int manipulate_m(char*m,unsigned int k,int typ)
+{//mzhizhen zijie
+    if(typ==1)//xie
+    {
+        unsigned char b=(char)128;
+        b=b>>(k%8);
+        *(m+k/8)=*(m+k/8)||b;
+    }
+    if(typ==0)//du//sousuo
+    {
+        //panduan shi 0 shi 1;&&b
+    }
+    return 0;
+}

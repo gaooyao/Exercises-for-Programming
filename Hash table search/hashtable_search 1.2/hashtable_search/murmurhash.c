@@ -1,6 +1,8 @@
+#include <stdlib.h>
 #include <stdint.h>
 
-#include <stdlib.h>
+
+
 // Microsoft Visual Studio
 
 #if defined(_MSC_VER)
@@ -8,9 +10,8 @@
 #define FORCE_INLINE	__forceinline
 
 
-
 #define ROTL32(x,y)	_rotl(x,y)
-#define ROTL64(x,y)	_rotl64(x,y)
+#define ROTL64(x,y)	_rotl64_self(x,y)
 
 #define BIG_CONSTANT(x) (x)
 
@@ -19,6 +20,10 @@
 #else	// defined(_MSC_VER)
 
 #define	FORCE_INLINE inline __attribute__((always_inline))
+unsigned long rotl64_self(uint64_t x, int8_t r)
+{
+    return (x << r) | (x >> (64 - r));
+}
 
 inline uint32_t rotl32(uint32_t x, int8_t r)
 {
@@ -31,7 +36,7 @@ inline uint64_t rotl64(uint64_t x, int8_t r)
 }
 
 #define	ROTL32(x,y)	rotl32(x,y)
-#define ROTL64(x,y)	rotl64(x,y)
+#define ROTL64(x,y)	_rotl64_self(x,y)
 
 #define BIG_CONSTANT(x) (x##LLU)
 
@@ -90,10 +95,10 @@ void MurmurHash3_x64_128(const void* key, const int len, const uint32_t seed, vo
 	for (int i = 0; i < nblocks; i++) {
 		uint64_t k1 = getblock64(blocks, i * 2 + 0);
 		uint64_t k2 = getblock64(blocks, i * 2 + 1);
-		k1 *= c1; k1 = ROTL64(k1, 31); k1 *= c2; h1 ^= k1;
-		h1 = ROTL64(h1, 27); h1 += h2; h1 = h1 * 5 + 0x52dce729;
-		k2 *= c2; k2 = ROTL64(k2, 33); k2 *= c1; h2 ^= k2;
-		h2 = ROTL64(h2, 31); h2 += h1; h2 = h2 * 5 + 0x38495ab5;
+		k1 *= c1; k1 = rotl64_self(k1, 31); k1 *= c2; h1 ^= k1;
+		h1 = rotl64_self(h1, 27); h1 += h2; h1 = h1 * 5 + 0x52dce729;
+		k2 *= c2; k2 = rotl64_self(k2, 33); k2 *= c1; h2 ^= k2;
+		h2 = rotl64_self(h2, 31); h2 += h1; h2 = h2 * 5 + 0x38495ab5;
 	}
 	const uint8_t* tail = (const uint8_t*)(data + nblocks * 16);
 	uint64_t k1 = 0;
@@ -106,7 +111,7 @@ void MurmurHash3_x64_128(const void* key, const int len, const uint32_t seed, vo
 	case 11: k2 ^= ((uint64_t)tail[10]) << 16;
 	case 10: k2 ^= ((uint64_t)tail[9]) << 8;
 	case  9: k2 ^= ((uint64_t)tail[8]) << 0;
-		k2 *= c2; k2 = ROTL64(k2, 33); k2 *= c1; h2 ^= k2;
+		k2 *= c2; k2 = rotl64_self(k2, 33); k2 *= c1; h2 ^= k2;
 	case  8: k1 ^= ((uint64_t)tail[7]) << 56;
 	case  7: k1 ^= ((uint64_t)tail[6]) << 48;
 	case  6: k1 ^= ((uint64_t)tail[5]) << 40;
@@ -115,7 +120,7 @@ void MurmurHash3_x64_128(const void* key, const int len, const uint32_t seed, vo
 	case  3: k1 ^= ((uint64_t)tail[2]) << 16;
 	case  2: k1 ^= ((uint64_t)tail[1]) << 8;
 	case  1: k1 ^= ((uint64_t)tail[0]) << 0;
-		k1 *= c1; k1 = ROTL64(k1, 31); k1 *= c2; h1 ^= k1;
+		k1 *= c1; k1 = rotl64_self(k1, 31); k1 *= c2; h1 ^= k1;
 	};
 	h1 ^= len; h2 ^= len;
 	h1 += h2;

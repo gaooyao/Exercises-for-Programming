@@ -42,9 +42,13 @@ int main() {
     dict_file = open_file("dict.txt", "r");
     while (read_line(dict_file, &str) == 1){
         for(int seed=0;seed<24;seed++){
-             MurmurHash3_x64_128(str, strlen(str),seed,out);
-        
+            MurmurHash3_x64_128(str, strlen(str),seed,out);
+            //manipulate_m(new_m,(unsigned int)out[1]%m,1);
+           // printf("%u\n",(unsigned int)out[1]%m);
+           // printf("%ul\n",out[1]);
+            //printf("%ul%ul\n",out[0],out[1]);
         }
+        
     }
    
     return 0;
@@ -99,7 +103,7 @@ int main() {
 					break;//终止所在层(while)的循环
 				}
 				node_pointer = node_pointer->next;	//若读取到的字符串与指针指向节点的字符串不相同则指针后移，直到最后还未成功匹配则查找失败
-                //？怎么判断 失败，失败后的具体操作有什么？
+                
 			}
 		    }
 	}
