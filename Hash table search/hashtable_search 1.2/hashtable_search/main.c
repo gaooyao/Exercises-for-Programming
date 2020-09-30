@@ -17,6 +17,7 @@
 #include "struct.h"
 #include "gy.h"
 #include "yn.h"
+#include "murmurhash.h"
 
 
 /* 变量的初始化 */
@@ -37,7 +38,17 @@ int main() {
     k=num_k(m,1270574);
     printf("k=%d\n",k);
     new_m=create_m(m);
+    uint64_t* out[2];
+    dict_file = open_file("dict.txt", "r");
+    while (read_line(dict_file, &str) == 1){
+        for(int seed=0;seed<24;seed++){
+             MurmurHash3_x64_128(str, strlen(str),seed,out);
+        
+        }
+    }
+   
     return 0;
+    
 	/* 打开用到的文件 */
 	start = clock();
 	string_file = open_file("string.txt", "r");
@@ -102,4 +113,5 @@ int main() {
 	close_file(result_file);
 	system("pause");
 	return 0;
+    
 }

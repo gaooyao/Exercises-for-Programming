@@ -5,6 +5,9 @@
 #include "hash.h"
 #include <math.h>
 #include "yn.h"
+#include "murmurhash.h"
+#include <stdint.h>
+
 
 /*
  * the Name of this : get_hash
@@ -89,7 +92,7 @@ int num_m(float f, int n)
     float m;
     m=n*1.44*log2(1/f);
     m=m/1+1;
-    return (int)m;
+    return (int)m;//m wei
 };
 /*
 * the Name of this  : num_k
@@ -110,11 +113,13 @@ int num_k(int m, int n)
 
 char* create_m(int m){
     m=m/8+1;
-    char* new_m = (char*)malloc(m);
+    char* new_m = (char*)malloc(m);//malloc zijie
     for(int i=0;i<m;i++)
     {
         *(new_m+i)=0;
     };
     return new_m;
 }
+
+
 

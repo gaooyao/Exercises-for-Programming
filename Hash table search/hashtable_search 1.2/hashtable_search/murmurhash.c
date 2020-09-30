@@ -1,13 +1,13 @@
-﻿#include <stdint.h>
+#include <stdint.h>
 
-
+#include <stdlib.h>
 // Microsoft Visual Studio
 
 #if defined(_MSC_VER)
 
 #define FORCE_INLINE	__forceinline
 
-#include <stdlib.h>
+
 
 #define ROTL32(x,y)	_rotl(x,y)
 #define ROTL64(x,y)	_rotl64(x,y)
