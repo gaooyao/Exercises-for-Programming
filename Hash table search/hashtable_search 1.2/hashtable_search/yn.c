@@ -93,7 +93,7 @@ int num_m(float f, int n)
     m=n*1.44*log2(1/f);
     m=m/1+1;
     return (int)m;//m wei
-};
+}
 /*
 * the Name of this  : num_k
 * the Function of this : calculate the number of Hash that we need
@@ -107,7 +107,7 @@ int num_k(int m, int n)
     k=0.693*m/n;
     k=k/1+1;
     return (int)k;
-};
+}
 /*
  */
 
@@ -117,7 +117,7 @@ char* create_m(int m){
     for(int i=0;i<m;i++)
     {
         *(new_m+i)=0;
-    };
+    }
     return new_m;
 }
 

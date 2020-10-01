@@ -17,7 +17,7 @@
 #include "struct.h"
 #include "gy.h"
 
-int FILE_BUFFER_SIZE = 1048576;    //文件缓冲区大小，单位字节
+int FILE_BUFFER_SIZE = 30485760;    //文件缓冲区大小，单位字节
 
 /*
 * 函数名称：create_new_node
@@ -87,6 +87,7 @@ FileHandler* open_file(char* file_name, char* open_type) {
 *		str：存放被读取文本的地址
 * 返回值：int，1为读取成功，0为读取失败
 * TODO:已知bug：若文件结尾为一空行则不会被输出
+* TODO:du read dict.txt fail when new buffer。
 */
 int read_line(FileHandler* file_handler, char** str) {
 	if (file_handler->open_status != 1) return 0;	//打开模式为写入时不允许读取
@@ -170,7 +171,30 @@ int close_file(FileHandler* file_handler) {
 	free(file_handler);
 	return 1;
 }
-
+/*r
+* 函数名称：close_file
+* 函数功能：关闭文件，释放FileHandler对象
+* 参数：    char*m：操作空间；
+ unsigned int k： 哈希值
+* 返回值：int,
+*/
+int manipulate_m(char*m,unsigned int k,int typ)
+{//mzhizhen zijie
+    if(typ==1)//写
+    {
+    unsigned char b=(char)128;//1000,0000永远只有1位是1
+        b=b>>(k%8);
+        *(m+k/8)=*(m+k/8)|b;//我觉得是*(m+k/8)|b=1？
+    }
+    if(typ==0)//读，判断是0是1;&&b
+    {
+        unsigned char b=(char)128;
+        b=b>>(k%8);//0001,0000假如m+k/8为a,若a为0101，0000。b=0001,0000;0001,0000
+        if(!(*(m+k/8)&b))
+            return 0;//0则跳过这一行
+    }
+    return 1;
+}
 
 
 //int n = 0;
@@ -184,17 +208,4 @@ int close_file(FileHandler* file_handler) {
 //}
 //system("pause");
 //return 0;
-int manipulate_m(char*m,unsigned int k,int typ)
-{//mzhizhen zijie
-    if(typ==1)//xie
-    {
-        unsigned char b=(char)128;
-        b=b>>(k%8);
-        *(m+k/8)=*(m+k/8) | b;
-    }
-    if(typ==0)//du//sousuo
-    {
-        //panduan shi 0 shi 1;&&b
-    }
-    return 0;
-}
+

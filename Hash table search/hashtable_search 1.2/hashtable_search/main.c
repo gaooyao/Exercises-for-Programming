@@ -35,30 +35,49 @@ int main() {
     int m,k;
     m=num_m(0.0000001,1270574);
     printf("m=%d\n",m);
-    k=num_k(m,1270574);
+    k=num_k(m,1270574);//k个哈希函数
     printf("k=%d\n",k);
-    new_m=create_m(m);
+    new_m=create_m(m);//连续的内存位置
     uint64_t* out[2];
 	/* 打开dict.txt，根据dict.txt建立内存 */
     dict_file = open_file("dict.txt", "r");
+    result_file = open_file("result.txt", "w");
+    string_file = open_file("string.txt", "r");
+    int tt = 0;
     while (read_line(dict_file, &str) == 1){
-        for(int seed=0;seed<24;seed++){
-            MurmurHash3_x64_128(str, strlen(str),seed,out);
-            manipulate_m(new_m,(unsigned int)out[1]%m,1);
-           // printf("%u\n",(unsigned int)out[1]%m);
-           // printf("%ul\n",out[1]);
-            //printf("%ul%ul\n",out[0],out[1]);
-        }
-        
-    }
+        tt++;
+        printf("正在操作dict第%d行\n",tt);
+        for(int seed=0;seed<24;seed++){//一行计算24次
+            MurmurHash3_x64_128(str, strlen(str),seed,out);//计算哈希值
+            manipulate_m(new_m,(unsigned int)out[1]%m,1);//置0置1
+        }//
 	/* 根据dict.txt建立内存结束 */
 	/* 打开string.txt，根据string.txt查询 */
 	
+   
+    tt = 0;
+    while (read_line(string_file, &str) == 1){
+        tt++;
+        printf("正在操作string第%d行\n",tt);
+        //若k==0,则跳过这一行
+        int t=0;//
+        for(int seed=0;seed<24;seed++){
+            if(t=0){
+            MurmurHash3_x64_128(str, strlen(str),seed,out);
+            if(!(manipulate_m(new_m,(unsigned int)out[1]%m,0)))
+                t=1;
+            }
+        }
+        if(t=0)
+            write_line(result_file, str);
 
+    }
 
 	/* 根据string.txt查询结束 */
 	/* 关闭文件，结束程序 */
 	close_file(dict_file);
+    close_file(string_file);
+    close_file(result_file);
     return 0;
     
 	/* 打开用到的文件 */
@@ -126,4 +145,5 @@ int main() {
 	system("pause");
 	return 0;
     
+}
 }
