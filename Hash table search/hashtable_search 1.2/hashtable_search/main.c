@@ -44,13 +44,14 @@ int main() {
     result_file = open_file("result.txt", "w");
     string_file = open_file("string.txt", "r");
     int tt = 0;
-    while (read_line(dict_file, &str) == 1){
-        tt++;
-        printf("正在操作dict第%d行\n",tt);
-        for(int seed=0;seed<24;seed++){//一行计算24次
-            MurmurHash3_x64_128(str, strlen(str),seed,out);//计算哈希值
-            manipulate_m(new_m,(unsigned int)out[1]%m,1);//置0置1
-        }//
+	while (read_line(dict_file, &str) == 1) {
+		tt++;
+		//printf("dict%d\n", tt);
+		for (int seed = 0; seed < 24; seed++) {//一行计算24次
+			MurmurHash3_x64_128(str, strlen(str), seed, out);//计算哈希值
+			manipulate_m(new_m, (unsigned int)out[1] % m, 1);//置0置1
+		}//
+	}
 	/* 根据dict.txt建立内存结束 */
 	/* 打开string.txt，根据string.txt查询 */
 	
@@ -58,17 +59,17 @@ int main() {
     tt = 0;
     while (read_line(string_file, &str) == 1){
         tt++;
-        printf("正在操作string第%d行\n",tt);
+        //printf("string%d\n",tt);
         //若k==0,则跳过这一行
         int t=0;//
         for(int seed=0;seed<24;seed++){
-            if(t=0){
+            if(t==0){
             MurmurHash3_x64_128(str, strlen(str),seed,out);
             if(!(manipulate_m(new_m,(unsigned int)out[1]%m,0)))
                 t=1;
             }
         }
-        if(t=0)
+        if(t==0)
             write_line(result_file, str);
 
     }
@@ -145,5 +146,4 @@ int main() {
 	system("pause");
 	return 0;
     
-}
 }
