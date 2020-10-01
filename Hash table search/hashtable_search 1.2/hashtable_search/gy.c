@@ -190,7 +190,7 @@ int manipulate_m(char*m,unsigned int k,int typ)
     {
         unsigned char b=(char)128;
         b=b>>(k%8);
-        *(m+k/8)=*(m+k/8)||b;
+        *(m+k/8)=*(m+k/8) | b;
     }
     if(typ==0)//du//sousuo
     {

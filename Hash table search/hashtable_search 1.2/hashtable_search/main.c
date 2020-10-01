@@ -39,18 +39,26 @@ int main() {
     printf("k=%d\n",k);
     new_m=create_m(m);
     uint64_t* out[2];
+	/* 打开dict.txt，根据dict.txt建立内存 */
     dict_file = open_file("dict.txt", "r");
     while (read_line(dict_file, &str) == 1){
         for(int seed=0;seed<24;seed++){
             MurmurHash3_x64_128(str, strlen(str),seed,out);
-            //manipulate_m(new_m,(unsigned int)out[1]%m,1);
+            manipulate_m(new_m,(unsigned int)out[1]%m,1);
            // printf("%u\n",(unsigned int)out[1]%m);
            // printf("%ul\n",out[1]);
             //printf("%ul%ul\n",out[0],out[1]);
         }
         
     }
-   
+	/* 根据dict.txt建立内存结束 */
+	/* 打开string.txt，根据string.txt查询 */
+	
+
+
+	/* 根据string.txt查询结束 */
+	/* 关闭文件，结束程序 */
+	close_file(dict_file);
     return 0;
     
 	/* 打开用到的文件 */

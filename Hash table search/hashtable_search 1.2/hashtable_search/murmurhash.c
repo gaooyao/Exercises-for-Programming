@@ -1,6 +1,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+unsigned long rotl64_self(uint64_t x, int8_t r)
+{
+	return (x << r) | (x >> (64 - r));
+}
 
 
 // Microsoft Visual Studio
@@ -20,10 +24,6 @@
 #else	// defined(_MSC_VER)
 
 #define	FORCE_INLINE inline __attribute__((always_inline))
-unsigned long rotl64_self(uint64_t x, int8_t r)
-{
-    return (x << r) | (x >> (64 - r));
-}
 
 inline uint32_t rotl32(uint32_t x, int8_t r)
 {
