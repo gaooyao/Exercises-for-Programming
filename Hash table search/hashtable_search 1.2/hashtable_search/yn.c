@@ -8,6 +8,7 @@
 #include "murmurhash.h"
 #include <stdint.h>
 
+int write_line_num = 0;	//是否在result文件中写入行号，0不写，1写入
 
 /*
  * the Name of this : get_hash
@@ -31,42 +32,44 @@ int get_hash(char* str) {
 
 int write_line(FileHandler* file_handler, char* str) {
 
-
+	
 	//if the file is not under the writing status
 	if (file_handler->open_status != 2) {
 		return 0;
 	}
-	file_handler->point++;
-    
-    //di
-	*(file_handler->buffer + file_handler->point) = 0xB5;
-	file_handler->point++;
-	*(file_handler->buffer + file_handler->point) = 0xDA;
 	
-    //convert the numbers to be auto-changed
-	char target[20];//we have 6306 numbers
-	static int num = 1;//numbers will change
-	char* t = target;
-	sprintf(target,"%d",num);
-
-	while (*t != 0) {
+	//如果需要写入行号
+	if (write_line_num) {
 		file_handler->point++;
-		*(file_handler->buffer + file_handler->point) = *t;
-        t++ ;
+		//di
+		*(file_handler->buffer + file_handler->point) = 0xB5;
+		file_handler->point++;
+		*(file_handler->buffer + file_handler->point) = 0xDA;
+
+		//convert the numbers to be auto-changed
+		char target[20];//we have 6306 numbers
+		static int num = 1;//numbers will change
+		char* t = target;
+		sprintf(target, "%d", num);
+
+		while (*t != 0) {
+			file_handler->point++;
+			*(file_handler->buffer + file_handler->point) = *t;
+			t++;
+		}
+		num++;
+
+		//hang:
+		file_handler->point++;
+		*(file_handler->buffer + file_handler->point) = 0xD0;
+		file_handler->point++;
+		*(file_handler->buffer + file_handler->point) = 0xD0;
+		file_handler->point++;
+		*(file_handler->buffer + file_handler->point) = 0x3A;
 	}
-    num++;
 
-    //hang:
-	file_handler->point++;
-	*(file_handler->buffer + file_handler->point) = 0xD0;
-	file_handler->point++;
-	*(file_handler->buffer + file_handler->point) = 0xD0;
-	file_handler->point++;
-	*(file_handler->buffer + file_handler->point) = 0x3A;
 	//把字符串写入缓冲区中
-	
     while (*str != 0) {
-
 		file_handler->point++;
 		*(file_handler->buffer + file_handler->point) = *str;
 		str++;

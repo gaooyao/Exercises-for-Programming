@@ -17,7 +17,7 @@
 #include "struct.h"
 #include "gy.h"
 
-int FILE_BUFFER_SIZE = 30485760;    //文件缓冲区大小，单位字节
+int FILE_BUFFER_SIZE = 262144;    //文件缓冲区大小，单位字节
 
 /*
 * 函数名称：create_new_node
@@ -150,6 +150,12 @@ int read_line(FileHandler* file_handler, char** str) {
 	//没有读入新数据，但已找到被读文本的开头和结尾
 	*(file_handler->buffer + file_handler->point) = 0;//断行
 	(*str) = (file_handler->buffer + old_point + 1);
+	return 1;
+}
+
+int reset_file(FileHandler* file_handler) {
+	file_handler->point = -1;
+	rewind(file_handler->file);
 	return 1;
 }
 
