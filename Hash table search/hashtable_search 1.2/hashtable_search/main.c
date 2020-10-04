@@ -31,6 +31,7 @@ char* str;
 int n=1270574;//待存储的字符串个数
 
 int main() {
+    start = clock();
     char *new_m1;
     int m1,k1;
     float fp1=0.0001;//期望的错误率
@@ -77,11 +78,14 @@ int main() {
     }
     printf("Error rate:%4f\b string match:%d\b ",fp1,num1);
     printf("\n");
+    end = clock();
+    printf("程序执行时间为 %f 秒.\n", (float)(end - start) / CLOCKS_PER_SEC);
 	/* 根据string.txt查询结束 */
 	/* 关闭文件，结束程序 */
 	close_file(dict_file);
     close_file(string_file);
     close_file(result_file);
+    start = clock();
     char *new_m2;
     int num2=0;
     int m2,k2;
@@ -120,6 +124,8 @@ int main() {
     }
     printf("Error rate:%5f\b string match:%d\b",fp2,num2);
     printf("\n");
+    end = clock();
+    printf("程序执行时间为 %f 秒.\n", (float)(end - start) / CLOCKS_PER_SEC);
     /* 根据string.txt查询结束 */
     /* 关闭文件，结束程序 */
     close_file(dict_file);
@@ -129,6 +135,7 @@ int main() {
     int m3,k3;
     int num3=0;
     float fp3=0.000001;
+    start = clock();
     m3=num_m(fp3,n);//m位
     //printf("需要%d位的连续存储空间\n",m);
     k3=num_k(m3,n);//k个哈希函数
@@ -165,6 +172,8 @@ int main() {
     }
     printf("Error rate:%6f\b string match:%d\b ",fp3,num3);
     printf("\n");
+    end = clock();
+    printf("程序执行时间为 %f 秒.\n", (float)(end - start) / CLOCKS_PER_SEC);
     /* 根据string.txt查询结束 */
     /* 关闭文件，结束程序 */
     close_file(dict_file);
