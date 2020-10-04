@@ -28,17 +28,18 @@ FileHandler* string_file;	//string.txt file handler
 FileHandler* dict_file;		//dict.txt file handler	
 FileHandler* result_file;	//result.txt file handler
 char* str;
-float fp=0.0000001;//期望的错误率
 int n=1270574;//待存储的字符串个数
 
 int main() {
-    char *new_m;
-    int m,k;
-    m=num_m(fp,n);//m位
-    printf("需要%d位的连续存储空间\n",m);
-    k=num_k(m,n);//k个哈希函数
-    printf("需要Hash函数%d个\n",k);
-    new_m=create_m(m);//连续的内存位置
+    char *new_m1;
+    int m1,k1;
+    float fp1=0.0001;//期望的错误率
+    int num1=0;
+    m1=num_m(fp1,n);//m位
+    //printf("需要%d位的连续存储空间\n",m);
+    k1=num_k(m1,n);//k个哈希函数
+    //printf("需要Hash函数%d个\n",k);
+    new_m1=create_m(m1);//连续的内存位置
     uint64_t* out[2];
 	/* 打开dict.txt，根据dict.txt建立内存 */
     dict_file = open_file("dict.txt", "r");
@@ -46,11 +47,11 @@ int main() {
     string_file = open_file("string.txt", "r");
     int tt = 0;
 	while (read_line(dict_file, &str) == 1) {
-		tt++;
-		printf("dict%d\n", tt);
+		//tt++;
+		//printf("dict%d\n", tt);
 		for (int seed = 0; seed < 24; seed++) {//一行计算24次
 			MurmurHash3_x64_128(str, strlen(str), seed, out);//计算哈希值
-			manipulate_m(new_m, (unsigned int)out[1] % m, 1);//置0置1
+			manipulate_m(new_m1, (unsigned int)out[1] % m1, 1);//置0置1
 		}//
 	}
 	/* 根据dict.txt建立内存结束 */
@@ -58,90 +59,118 @@ int main() {
     tt = 0;
     while (read_line(string_file, &str) == 1){
         tt++;
-
         int t=0;//
         for(int seed=0;seed<24;seed++){
             if(t==0){
             MurmurHash3_x64_128(str, strlen(str),seed,out);
-            if(!(manipulate_m(new_m,(unsigned int)out[1]%m,0)))
+            if(!(manipulate_m(new_m1,(unsigned int)out[1]%m1,0)))
                 t=1;
             }
         }
+        
         if(t==0)
+        {
+            num1++;
             write_line(result_file, str);
+        }
 
     }
-
+    printf("Error rate:%4f\b string match:%d\b ",fp1,num1);
+    printf("\n");
 	/* 根据string.txt查询结束 */
 	/* 关闭文件，结束程序 */
 	close_file(dict_file);
     close_file(string_file);
     close_file(result_file);
+    char *new_m2;
+    int num2=0;
+    int m2,k2;
+    float fp2=0.00001;//期望的错误率
+    m2=num_m(fp2,n);//m位
+    //printf("需要%d位的连续存储空间\n",m);
+    k2=num_k(m2,n);//k个哈希函数
+    //printf("需要Hash函数%d个\n",k);
+    new_m2=create_m(m2);//连续的内存位置
+    /* 打开dict.txt，根据dict.txt建立内存 */
+    dict_file = open_file("dict.txt", "r");
+    result_file = open_file("result.txt", "w");
+    string_file = open_file("string.txt", "r");
+    while (read_line(dict_file, &str) == 1) {
+        for (int seed = 0; seed < 24; seed++) {//一行计算24次
+            MurmurHash3_x64_128(str, strlen(str), seed, out);//计算哈希值
+            manipulate_m(new_m2, (unsigned int)out[1] % m2, 1);//置0置1
+        }//
+    }
+    /* 根据dict.txt建立内存结束 */
+    /* 打开string.txt，根据string.txt查询 */
+    while (read_line(string_file, &str) == 1){
+        int t=0;//
+        for(int seed=0;seed<24;seed++){
+            if(t==0){
+            MurmurHash3_x64_128(str, strlen(str),seed,out);
+            if(!(manipulate_m(new_m2,(unsigned int)out[1]%m2,0)))
+                t=1;
+            }
+        }
+        if(t==0)
+        {
+           num2++;
+            write_line(result_file, str);
+        }
+    }
+    printf("Error rate:%5f\b string match:%d\b",fp2,num2);
+    printf("\n");
+    /* 根据string.txt查询结束 */
+    /* 关闭文件，结束程序 */
+    close_file(dict_file);
+    close_file(string_file);
+    close_file(result_file);
+    char *new_m3;
+    int m3,k3;
+    int num3=0;
+    float fp3=0.000001;
+    m3=num_m(fp3,n);//m位
+    //printf("需要%d位的连续存储空间\n",m);
+    k3=num_k(m3,n);//k个哈希函数
+    //printf("需要Hash函数%d个\n",k);
+    new_m3=create_m(m3);//连续的内存位置
+    /* 打开dict.txt，根据dict.txt建立内存 */
+    dict_file = open_file("dict.txt", "r");
+    result_file = open_file("result.txt", "w");
+    string_file = open_file("string.txt", "r");
+    tt = 0;
+    while (read_line(dict_file, &str) == 1) {
+        //tt++;
+        //printf("dict%d\n", tt);
+        for (int seed = 0; seed < 24; seed++) {//一行计算24次
+            MurmurHash3_x64_128(str, strlen(str), seed, out);//计算哈希值
+            manipulate_m(new_m3, (unsigned int)out[1] % m3, 1);//置0置1
+        }//
+    }
+    /* 根据dict.txt建立内存结束 */
+    /* 打开string.txt，根据string.txt查询 */
+    while (read_line(string_file, &str) == 1){
+        int t=0;//
+        for(int seed=0;seed<24;seed++){
+            if(t==0){
+            MurmurHash3_x64_128(str, strlen(str),seed,out);
+            if(!(manipulate_m(new_m3,(unsigned int)out[1]%m3,0)))
+                t=1;
+            }
+        }
+        if(t==0){
+            num3++;
+            write_line(result_file, str);
+        }
+    }
+    printf("Error rate:%6f\b string match:%d\b ",fp3,num3);
+    printf("\n");
+    /* 根据string.txt查询结束 */
+    /* 关闭文件，结束程序 */
+    close_file(dict_file);
+    close_file(string_file);
+    close_file(result_file);
     return 0;
     
-	/* 打开用到的文件 */
-	start = clock();
-	string_file = open_file("string.txt", "r");
-	dict_file = open_file("dict.txt", "r");
-	result_file = open_file("result.txt", "w");
-	end = clock();
-	printf("File Opened successfully. It takes %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
-
-	/* 根据string.txt构建hash表 */
-	printf("Building the hash table now...\n");
-	int ct_num = 0;		//变量ct记录发生冲突次数
-    while (read_line(string_file, &str) == 1) {
-		list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff] = (char)1;	//此字符串的前三个字节出现，在三维数组中对应位置标记为1
-		int hash_key = get_hash(str);
-		if (!strlen(hash_table[hash_key].str)) {	//若hash表中对应位置的node为空，则把其文本内容设置为当前字符串
-			strcpy(hash_table[hash_key].str, str);
-		}
-		else {	//若hash表中对应位置的node不为空，则创建新node放在node链的末尾
-			HashNode* new_node = create_new_node(str);			//创建新的node
-			HashNode* node_pointer = &hash_table[hash_key];		//node指针先指向node链第一个节点
-			while (node_pointer->next) {	//循环遍历，直到找到最后一个节点
-				ct_num++;	//若node_pointer指向的节点不是最后一个节点，冲突次数加一
-				node_pointer = node_pointer->next;
-			}
-			node_pointer->next = new_node;		//最后一个node的next指针指向新创建的node
-		}
-	}
-	start = clock();//
-	printf("Construction of Hash Completed, it takes %f seconds, conflicts occurred %d times\n", (float)(start - end) / CLOCKS_PER_SEC, ct_num);
-
-	/* 开始搜索，依次取dict.txt的每一行，在构建好的hash表中搜索 */
-	printf("Start Searching...\n");
-	int total_line = 0;		//dict.txt文本的总行数
-	int hash_line = 0;		//需要计算hash值的行数
-	int success_line = 0;	//成功在hash表中找到的行数
-	while (read_line(dict_file, &str)) {
-		total_line++;
-        if (list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff]) {	//粗过滤，若被找字符串的前三个字节未在字典中出现过，则直接跳过
-			//前三个字节出现过，需要进hash表精确查找
-			hash_line++;
-			int hash_key = get_hash(str);
-			HashNode* node_pointer = &(hash_table[hash_key]);	//创建指针指向hash表中对应位置的首节点
-			while (node_pointer) {
-				if (!strcmp(node_pointer->str, str)) {	//文件读取到的字符串与指针指向节点的字符串对比，若相同则说明此字符串出现过，搜索成功
-					//查找成功，计数并保存到输出文件
-					success_line++;
-					write_line(result_file, str);
-					break;//终止所在层(while)的循环
-				}
-				node_pointer = node_pointer->next;	//若读取到的字符串与指针指向节点的字符串不相同则指针后移，直到最后还未成功匹配则查找失败
-                
-			}
-		    }
-	}
-	end = clock();
-	printf("Searching Completed. It takes %f seconds. \n", (float)(end - start) / CLOCKS_PER_SEC);//搜索完成，共用时%f秒
-
-	/* 搜索任务完成，显示搜索结果并退出 */
-	printf("Task Completed. It is included %d lines. %d lines remaining after first filtering, %d lines have been found.\n", total_line, hash_line, success_line);//任务完成，一共 %d 行，首次过滤后剩余 %d 行，搜索到 %d 行。
-	close_file(string_file);
-	close_file(dict_file);
-	close_file(result_file);
-	system("pause");
-	return 0;
-    
+	
 }
