@@ -82,7 +82,7 @@ int write_line(FileHandler* file_handler, char* str) {
 
 /*
 * the Name of this  : num_m
-* the Function of this : calculate the number of memory that we need
+* the Function of this : calculate the number of memory that we need --- m位
 * Parameter 1 : float f : the error that we allow=0.0000001
 * Parameter 2 : int n : the number of the char=1270574
 * value of return : int
@@ -92,7 +92,7 @@ int num_m(float f, int n)
     float m;
     m=n*1.44*log2(1/f);
     m=m/1+1;
-    return (int)m;//m wei
+    return (int)m;//m位
 }
 /*
 * the Name of this  : num_k
@@ -109,11 +109,15 @@ int num_k(int m, int n)
     return (int)k;
 }
 /*
- */
+* the Name of this  : create_m
+* the Function of this : 创建m大小的空间
+* Parameter 1 : int m : int(m/8+1)个字节大小
+* value of return : new_m，以new_m开头的地址。
+*/
 
 char* create_m(int m){
     m=m/8+1;
-    char* new_m = (char*)malloc(m);//malloc zijie
+    char* new_m = (char*)malloc(m);//malloc字节 
     for(int i=0;i<m;i++)
     {
         *(new_m+i)=0;

@@ -172,25 +172,25 @@ int close_file(FileHandler* file_handler) {
 	return 1;
 }
 /*r
-* 函数名称：close_file
-* 函数功能：关闭文件，释放FileHandler对象
+* 函数名称：manipulate_m
+* 函数功能：读取与写入bloom过滤器
 * 参数：    char*m：操作空间；
  unsigned int k： 哈希值
 * 返回值：int,
 */
-int manipulate_m(char*m,unsigned int k,int typ)
+int manipulate_m(char*m,unsigned int h,int typ)
 {//mzhizhen zijie
     if(typ==1)//写
     {
     unsigned char b=(char)128;//1000,0000永远只有1位是1
-        b=b>>(k%8);
-        *(m+k/8)=*(m+k/8)|b;//我觉得是*(m+k/8)|b=1？
+        b=b>>(h%8);
+        *(m+h/8)=*(m+h/8)|b;//
     }
     if(typ==0)//读，判断是0是1;&&b
     {
         unsigned char b=(char)128;
-        b=b>>(k%8);//0001,0000假如m+k/8为a,若a为0101，0000。b=0001,0000;0001,0000
-        if(!(*(m+k/8)&b))
+        b=b>>(h%8);//0001,0000假如m+k/8为a,若a为0101，0000。b=0001,0000;0001,0000
+        if(!(*(m+h/8)&b))
             return 0;//0则跳过这一行
     }
     return 1;

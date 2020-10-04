@@ -67,7 +67,7 @@ int write_line(FileHandler* file_handler, char* str) {
 		*(file_handler->buffer + file_handler->point) = *str;
 		str++;
 	}
-	//查入换行符
+	//插入换行符
 	file_handler->point++;
 	*(file_handler->buffer + file_handler->point) = 10;
 

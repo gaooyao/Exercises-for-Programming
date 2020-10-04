@@ -28,15 +28,16 @@ FileHandler* string_file;	//string.txt file handler
 FileHandler* dict_file;		//dict.txt file handler	
 FileHandler* result_file;	//result.txt file handler
 char* str;
-
+float fp=0.0000001;//期望的错误率
+int n=1270574;//待存储的字符串个数
 
 int main() {
     char *new_m;
     int m,k;
-    m=num_m(0.0000001,1270574);
-    printf("m=%d\n",m);
-    k=num_k(m,1270574);//k个哈希函数
-    printf("k=%d\n",k);
+    m=num_m(fp,n);//m位
+    printf("需要%d位的连续存储空间\n",m);
+    k=num_k(m,n);//k个哈希函数
+    printf("需要Hash函数%d个\n",k);
     new_m=create_m(m);//连续的内存位置
     uint64_t* out[2];
 	/* 打开dict.txt，根据dict.txt建立内存 */
@@ -46,7 +47,7 @@ int main() {
     int tt = 0;
 	while (read_line(dict_file, &str) == 1) {
 		tt++;
-		//printf("dict%d\n", tt);
+		printf("dict%d\n", tt);
 		for (int seed = 0; seed < 24; seed++) {//一行计算24次
 			MurmurHash3_x64_128(str, strlen(str), seed, out);//计算哈希值
 			manipulate_m(new_m, (unsigned int)out[1] % m, 1);//置0置1
@@ -54,13 +55,10 @@ int main() {
 	}
 	/* 根据dict.txt建立内存结束 */
 	/* 打开string.txt，根据string.txt查询 */
-	
-   
     tt = 0;
     while (read_line(string_file, &str) == 1){
         tt++;
-        //printf("string%d\n",tt);
-        //若k==0,则跳过这一行
+
         int t=0;//
         for(int seed=0;seed<24;seed++){
             if(t==0){
