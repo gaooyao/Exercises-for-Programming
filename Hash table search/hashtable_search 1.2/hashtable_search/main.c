@@ -18,7 +18,7 @@
 #include "gy.h"
 #include "yn.h"
 #include "murmurhash.h"
-
+#include <unistd.h>
 
 /* 变量的初始化 */
 clock_t start, end;		//时间变量，用于统计运行时间
@@ -94,6 +94,6 @@ int main(){
     close_file(dict_file);
     close_file(string_file);
     printf("runtime: %f s\n" ,(float)(end - start) / CLOCKS_PER_SEC);
-    system("pause");
+    sleep(3);
     return 0;
 }

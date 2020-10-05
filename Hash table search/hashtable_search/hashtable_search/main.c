@@ -17,7 +17,7 @@
 #include "struct.h"
 #include "gy.h"
 #include "yn.h"
-
+#include <unistd.h>
 
 /* 变量的初始化 */
 clock_t start, end;		//时间变量，用于统计运行时间
@@ -91,9 +91,10 @@ int main() {
 	/* 搜索任务完成，显示搜索结果并退出 */
 	//printf("Task Completed. It is included %d lines. %d lines remaining after first filtering, %d lines have been found.\n", total_line, hash_line, success_line);//任务完成，一共 %d 行，首次过滤后剩余 %d 行，搜索到 %d 行。
 	printf("runtime:%f      sring_march:%d\n", (float)(end - start) / CLOCKS_PER_SEC, success_line);
+    
 	close_file(string_file);
 	close_file(dict_file);
 	close_file(result_file);
-	system("pause");
+	sleep(3);
 	return 0;
 }
