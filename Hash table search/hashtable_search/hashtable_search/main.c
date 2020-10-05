@@ -37,10 +37,10 @@ int main() {
 	dict_file = open_file("dict.txt", "r");
 	result_file = open_file("result.txt", "w");
 	end = clock();
-	printf("File Opened successfully. It takes %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
+	//printf("File Opened successfully. It takes %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
 
 	/* 根据string.txt构建hash表 */
-	printf("Building the hash table now...\n");
+	//printf("Building the hash table now...\n");
 	int ct_num = 0;		//变量ct记录发生冲突次数
     while (read_line(string_file, &str) == 1) {
 		list[str[0] & 0xff][str[1] & 0xff][str[2] & 0xff] = (char)1;	//此字符串的前三个字节出现，在三维数组中对应位置标记为1
@@ -59,10 +59,10 @@ int main() {
 		}
 	}
 	start = clock();//
-	printf("Construction of Hash Completed, it takes %f seconds, conflicts occurred %d times\n", (float)(start - end) / CLOCKS_PER_SEC, ct_num);
+	//printf("Construction of Hash Completed, it takes %f seconds, conflicts occurred %d times\n", (float)(start - end) / CLOCKS_PER_SEC, ct_num);
 
 	/* 开始搜索，依次取dict.txt的每一行，在构建好的hash表中搜索 */
-	printf("Start Searching...\n");
+	//printf("Start Searching...\n");
 	int total_line = 0;		//dict.txt文本的总行数
 	int hash_line = 0;		//需要计算hash值的行数
 	int success_line = 0;	//成功在hash表中找到的行数
@@ -86,10 +86,11 @@ int main() {
 		    }
 	}
 	end = clock();
-	printf("Searching Completed. It takes %f seconds. \n", (float)(end - start) / CLOCKS_PER_SEC);//搜索完成，共用时%f秒
+	//printf("Searching Completed. It takes %f seconds. \n", (float)(end - start) / CLOCKS_PER_SEC);//搜索完成，共用时%f秒
 
 	/* 搜索任务完成，显示搜索结果并退出 */
-	printf("Task Completed. It is included %d lines. %d lines remaining after first filtering, %d lines have been found.\n", total_line, hash_line, success_line);//任务完成，一共 %d 行，首次过滤后剩余 %d 行，搜索到 %d 行。
+	//printf("Task Completed. It is included %d lines. %d lines remaining after first filtering, %d lines have been found.\n", total_line, hash_line, success_line);//任务完成，一共 %d 行，首次过滤后剩余 %d 行，搜索到 %d 行。
+	printf("runtime:%f      sring_march:%d\n", (float)(end - start) / CLOCKS_PER_SEC, success_line);
 	close_file(string_file);
 	close_file(dict_file);
 	close_file(result_file);
