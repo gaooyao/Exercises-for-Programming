@@ -30,13 +30,13 @@ int n=1270574;//待存储的字符串个数
 float fp_list[3] = { 0.0001, 0.00001, 0.000001 };
 char result_file_name_list[3][20] = { "result_0.0001.txt", "result_0.00001.txt", "result_0.000001.txt" };
 
-int main() {
+int main(){
     /* 打开dict.txt，根据dict.txt建立内存 */
     dict_file = open_file("dict.txt", "r");
     string_file = open_file("string.txt", "r");
+    start=clock();
     int cycle_num;
     for (cycle_num = 0; cycle_num < 3; cycle_num++) {
-        start = clock();
         char* new_m;
         int m, k;
         float fp = fp_list[cycle_num];//期望的错误率
@@ -54,6 +54,7 @@ int main() {
         while (read_line(dict_file, &str) == 1) {
             //tt++;
             //printf("dict%d\n", tt);
+
             for (int seed = 0; seed < 24; seed++) {//一行计算24次
                 MurmurHash3_x64_128(str, strlen(str), seed, out);//计算哈希值
                 manipulate_m(new_m, (unsigned int)out[1] % m, 1);//置0置1
@@ -78,18 +79,21 @@ int main() {
                 write_line(result_file, str);
             }
         }
-        printf("Error rate:%4f string match:%d ", fp, num);
+        printf("Error rate:%f string match:%d ", fp, num);
         printf("\n");
-        end = clock();
-        printf("use %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
+        //printf("use %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
         /* 根据string.txt查询结束 */
         /* 关闭文件，结束程序 */
         close_file(result_file);
         reset_file(dict_file);
         reset_file(string_file);
+        
+        
     }
+    end=clock();
     close_file(dict_file);
     close_file(string_file);
+    printf("runtime: %f s\n" ,(float)(end - start) / CLOCKS_PER_SEC);
     system("pause");
     return 0;
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7514BF7C2517951600693EF9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 7514BF7B2517951600693EF9 /* main.c */; };
 		7527051D252232220068E853 /* murmurhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7527051C252232220068E853 /* murmurhash.c */; };
+		75464F97252B36CD003B3D2D /* MurmurHash2.c in Sources */ = {isa = PBXBuildFile; fileRef = 75464F96252B36CD003B3D2D /* MurmurHash2.c */; };
 		757EE69E2519F42500C148C4 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 757EE69B2519F42500C148C4 /* hash.c */; };
 		7583A570251C8910005A097A /* gy.c in Sources */ = {isa = PBXBuildFile; fileRef = 7583A56F251C8910005A097A /* gy.c */; };
 		759584F2251CABA300FF06B1 /* yn.c in Sources */ = {isa = PBXBuildFile; fileRef = 759584F1251CABA300FF06B1 /* yn.c */; };
@@ -31,6 +32,8 @@
 		7514BF7B2517951600693EF9 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7527051B2522321D0068E853 /* murmurhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = murmurhash.h; sourceTree = "<group>"; };
 		7527051C252232220068E853 /* murmurhash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = murmurhash.c; sourceTree = "<group>"; };
+		75464F95252B36CD003B3D2D /* MurmurHash2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MurmurHash2.h; sourceTree = "<group>"; };
+		75464F96252B36CD003B3D2D /* MurmurHash2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MurmurHash2.c; sourceTree = "<group>"; };
 		757EE69A2519F42500C148C4 /* struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = struct.h; sourceTree = "<group>"; };
 		757EE69B2519F42500C148C4 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
 		757EE6A02519F8B400C148C4 /* gy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gy.h; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 		7514BF7A2517951600693EF9 /* hashtable_search */ = {
 			isa = PBXGroup;
 			children = (
+				75464F95252B36CD003B3D2D /* MurmurHash2.h */,
+				75464F96252B36CD003B3D2D /* MurmurHash2.c */,
 				75DECE0525260163002691C7 /* result.txt */,
 				75DECE0425260124002691C7 /* dict.txt */,
 				7527051C252232220068E853 /* murmurhash.c */,
@@ -148,6 +153,7 @@
 			files = (
 				759584F2251CABA300FF06B1 /* yn.c in Sources */,
 				7583A570251C8910005A097A /* gy.c in Sources */,
+				75464F97252B36CD003B3D2D /* MurmurHash2.c in Sources */,
 				7527051D252232220068E853 /* murmurhash.c in Sources */,
 				7514BF7C2517951600693EF9 /* main.c in Sources */,
 				757EE69E2519F42500C148C4 /* hash.c in Sources */,
