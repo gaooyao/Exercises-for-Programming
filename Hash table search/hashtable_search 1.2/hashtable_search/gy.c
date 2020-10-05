@@ -16,6 +16,8 @@
 
 #include "struct.h"
 #include "gy.h"
+char input_dict[99] = "/home/wanglei/course/";
+char output_dict[99] = "/home/wanglei/course/result/";
 
 int FILE_BUFFER_SIZE = 262144;    //文件缓冲区大小，单位字节
 

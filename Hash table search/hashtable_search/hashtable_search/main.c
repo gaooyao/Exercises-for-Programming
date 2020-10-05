@@ -19,6 +19,10 @@
 #include "yn.h"
 #include <unistd.h>
 
+//#char input_dict[99] = "/home/wanglei/course/";
+//#char output_res[99] = "/home/wanglei/course/result/";
+
+
 /* 变量的初始化 */
 clock_t start, end;		//时间变量，用于统计运行时间
 HashNode hash_table[23767] = { "",NULL };	//主Hash表
@@ -33,9 +37,9 @@ int main() {
 
 	/* 打开用到的文件 */
 	start = clock();
-	string_file = open_file("string.txt", "r");
-	dict_file = open_file("dict.txt", "r");
-	result_file = open_file("result.txt", "w");
+	string_file = open_file("/home/wanglei/course/string.txt" , "r");
+	dict_file = open_file("/home/wanglei/course/dict.txt", "r");
+	result_file = open_file("/home/wanglei/course/result/result_37.txt", "w");
 	end = clock();
 	//printf("File Opened successfully. It takes %f seconds.\n", (float)(end - start) / CLOCKS_PER_SEC);
 

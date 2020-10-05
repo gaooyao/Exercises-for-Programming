@@ -19,6 +19,8 @@
 #include "yn.h"
 #include "murmurhash.h"
 #include <unistd.h>
+char input_dict[99] = "/home/wanglei/course/";
+char output_dict[99] = "/home/wanglei/course/result/";
 
 /* 变量的初始化 */
 clock_t start, end;		//时间变量，用于统计运行时间
@@ -28,12 +30,12 @@ FileHandler* result_file;	//result.txt file handler
 char* str;
 int n=1270574;//待存储的字符串个数
 float fp_list[3] = { 0.0001, 0.00001, 0.000001 };
-char result_file_name_list[3][20] = { "result_0.0001.txt", "result_0.00001.txt", "result_0.000001.txt" };
+char result_file_name_list[3][99] = { "/home/wanglei/course/result/result_37_0.0001.txt", "/home/wanglei/course/result/result_37_0.00001.txt", "/home/wanglei/course/result/result_37_0.000001.txt" };
 
 int main(){
     /* 打开dict.txt，根据dict.txt建立内存 */
-    dict_file = open_file("dict.txt", "r");
-    string_file = open_file("string.txt", "r");
+    dict_file = open_file("/home/wanglei/course/dict.txt", "r");
+    string_file = open_file("/home/wanglei/course/string.txt", "r");
     start=clock();
     int cycle_num;
     for (cycle_num = 0; cycle_num < 3; cycle_num++) {
