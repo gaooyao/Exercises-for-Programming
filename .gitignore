@@ -23,6 +23,9 @@ mono_crash.*
 .vs
 .vscode
 
+.DS_Store
+*.xcodeproj
+
 x64/
 x86/
 [Aa][Rr][Mm]/
