@@ -23,6 +23,8 @@ mono_crash.*
 .vs
 .vscode
 
+.exe
+
 .DS_Store
 *.xcodeproj
 
