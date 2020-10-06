@@ -19,8 +19,10 @@ mono_crash.*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
+
+.vs
+.vscode
+
 x64/
 x86/
 [Aa][Rr][Mm]/
