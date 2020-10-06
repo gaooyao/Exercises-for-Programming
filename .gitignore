@@ -20,6 +20,8 @@ mono_crash.*
 [Dd]ebug/
 [Dd]ebugPublic/
 
+.vs
+.vscode
 
 x64/
 x86/
