@@ -17,6 +17,6 @@ int main()
     }
     close_file(file_a);
     close_file(file_b);
-    system("pause");
+    getchar();
     return 0;
 }
