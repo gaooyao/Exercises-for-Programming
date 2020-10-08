@@ -20,6 +20,8 @@ mono_crash.*
 [Dd]ebug/
 [Dd]ebugPublic/
 
+result*.txt
+
 .vs
 .vscode
 
