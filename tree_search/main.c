@@ -17,7 +17,7 @@ int main()
     FileHandler *file_string;
     FileHandler *file_result;
     char *result_file_list[4] = {"result_bplus.txt", "result_rawtrie.txt", "result_mtrie.txt", "result_radix.txt"};
-    char operate_list[4] = {'b', 'w', 'm', 'd'}; //b:bplus;w:rawtrie;m:mtrie;d:radix;
+    char operate_list[4] = {'b', ' ', ' ', ' '}; //b:bplus;w:rawtrie;m:mtrie;d:radix;
     file_dict = open_file("dict.txt", "rb");
     file_string = open_file("string.txt", "rb");
     typedef void (*init_tree_function)();
@@ -67,7 +67,10 @@ int main()
         init_tree();
         while (read_line(file_dict, &str))
         {
-            insert_recoder(str);
+            if (!insert_recoder(str))
+            {
+                //printf("%s\n",str);
+            };
         }
         while (read_line(file_string, &str))
         {
