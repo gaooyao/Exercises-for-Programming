@@ -83,6 +83,6 @@ int main()
     }
     close_file(file_dict);
     close_file(file_string);
-    getchar();
+    printf("\nProcess finished.\n");
     return 0;
 }

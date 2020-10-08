@@ -1,7 +1,7 @@
 #include <stdio.h>
 void radix_init_tree()
 {
-    printf("init d");
+    printf("init d\n");
 }
 
 int radix_insert_recoder(char *str)
@@ -15,5 +15,5 @@ int radix_query_recoder(char *str)
 }
 void radix_destroy_tree()
 {
-    printf("destroy d");
+    printf("destroy d\n");
 }

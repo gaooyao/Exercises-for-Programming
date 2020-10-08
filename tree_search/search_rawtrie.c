@@ -1,7 +1,7 @@
 #include <stdio.h>
 void rawtrie_init_tree()
 {
-    printf("init w");
+    printf("init w\n");
 }
 
 int rawtrie_insert_recoder(char *str)
@@ -15,5 +15,5 @@ int rawtrie_query_recoder(char *str)
 }
 void rawtrie_destroy_tree()
 {
-    printf("destroy w");
+    printf("destroy w\n");
 }

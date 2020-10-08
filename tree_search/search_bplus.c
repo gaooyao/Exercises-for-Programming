@@ -1,7 +1,7 @@
 #include <stdio.h>
 void bplus_init_tree()
 {
-    printf("init b");
+    printf("init b\n");
 }
 
 int bplus_insert_recoder(char *str)
@@ -15,5 +15,5 @@ int bplus_query_recoder(char *str)
 }
 void bplus_destroy_tree()
 {
-    printf("destroy b");
+    printf("destroy b\n");
 }

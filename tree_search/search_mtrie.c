@@ -2,7 +2,7 @@
 
 void mtrie_init_tree()
 {
-    printf("init m");
+    printf("init m\n");
 }
 
 int mtrie_insert_recoder(char *str)
@@ -17,5 +17,5 @@ int mtrie_query_recoder(char *str)
 
 void mtrie_destroy_tree()
 {
-    printf("destroy m");
+    printf("destroy m\n");
 }
