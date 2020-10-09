@@ -213,7 +213,10 @@ void bplus_init_tree()
 
 int bplus_insert_recoder(char *str)
 {
-    return BPlusTree_Insert(get_hash(str), str);
+    if(!BPlusTree_Insert(get_hash(str), str)){
+
+    }
+    return 1;
 }
 
 int bplus_query_recoder(char *str)

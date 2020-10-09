@@ -14,31 +14,31 @@ void rawtrie_init_tree()
     {
         root->child[i] = NULL;
     }
-    printf("init w\n");
 }
-TrieNode* rawtrie_new_tree(){
-    TrieNode * obj = (TrieNode *)malloc(sizeof(TrieNode));
+TrieNode* rawtrie_new_node(){
+    TrieNode* obj = (TrieNode*)malloc(sizeof(TrieNode));
     obj->count = 0;
     int i;
     for (i = 0; i < 256;i++)
     {
         obj->child[i] = NULL;
     }
-    printf("init w\n");
+    return obj;
 }
 
 int rawtrie_insert_recoder(char *str){
-    char *p = str;
-    TrieNode *node = root;
-    while (*p) {
-        if (node->child[*p] == NULL) {
+    char* p = str;
+    TrieNode* node = root;
+    while (*p != '\0') {
+        if (node->child[(unsigned char)*p] == NULL) {
             /* 对应的节点不存在，则申请一个节点 */
-            node->child[(int)(*p)] = rawtrie_new_tree();
+            node->child[(unsigned char)(*p)] = rawtrie_new_node();
         }
-        node = node->child[*p]; /* 指向子节点 */
+        node = node->child[(unsigned char)*p]; /* 指向子节点 */
         p++;
     }
     node->count++;
+    return 1;
 }
 
 int rawtrie_query_recoder(char *str)
@@ -47,7 +47,7 @@ int rawtrie_query_recoder(char *str)
     char *p = str;
 
     while (*p && node != NULL) {
-        node = node->child[*p]; /* 循环在树中查找所有节点 */
+        node = node->child[(unsigned char)*p]; /* 循环在树中查找所有节点 */
         p++;
     }
 
