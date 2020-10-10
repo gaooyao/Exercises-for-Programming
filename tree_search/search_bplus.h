@@ -1,7 +1,7 @@
 #ifndef search_bplus
 #define search_bplus
 
-#define MAX_CHILD_NUMBER 1000
+#define MAX_CHILD_NUMBER 64
 
 typedef struct BPlusTreeNode
 {
@@ -14,10 +14,16 @@ typedef struct BPlusTreeNode
     struct BPlusTreeNode *last;
 } BPlusTreeNode;
 
+typedef struct BPlusTreeRecorder
+{
+    char *str;
+    struct BPlusTreeRecorder *next;
+} BPlusTreeRecorder;
+
 extern void BPlusTree_SetMaxChildNumber(int);
 extern void BPlusTree_Init();
 extern void BPlusTree_Destroy();
-extern int BPlusTree_Insert(int, void *);
+extern int BPlusTree_Insert(int, BPlusTreeRecorder *);
 extern int BPlusTree_GetTotalNodes();
 extern void BPlusTree_Query_Key(int);
 extern void BPlusTree_Query_Range(int, int);

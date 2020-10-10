@@ -9,7 +9,6 @@
 
 struct BPlusTreeNode *Root;
 int MaxChildNumber = 64;
-int TotalNodes;
 uint64_t *out[2];
 /** Destroy subtree whose root is Cur, By recursion */
 void Destroy(BPlusTreeNode *Cur)
@@ -90,10 +89,9 @@ BPlusTreeNode *New_BPlusTreeNode()
     p->father = NULL;
     p->next = NULL;
     p->last = NULL;
-    TotalNodes++;
     return p;
 }
-void Insert(BPlusTreeNode *Cur, int key, void *value);
+void Insert(BPlusTreeNode *Cur, int key, BPlusTreeRecorder *value);
 void Split(BPlusTreeNode *Cur)
 {
     // copy Cur(Mid .. MaxChildNumber) -> Temp(0 .. Temp->key_num)
@@ -142,7 +140,7 @@ void Split(BPlusTreeNode *Cur)
     }
 }
 /** Insert (key, value) into Cur, if Cur is full, then split it to fit the definition of B+tree */
-void Insert(BPlusTreeNode *Cur, int key, void *value)
+void Insert(BPlusTreeNode *Cur, int key, BPlusTreeRecorder *value)
 {
     int i, ins;
     if (key < Cur->key[0])
@@ -156,7 +154,7 @@ void Insert(BPlusTreeNode *Cur, int key, void *value)
     }
     Cur->key_num++;
     Cur->key[ins] = key;
-    Cur->child[ins] = value;
+    Cur->child[ins] = (void* )value;
     if (Cur->isLeaf == false)
     { // make links on leaves
         BPlusTreeNode *firstChild = (BPlusTreeNode *)(Cur->child[0]);
@@ -187,12 +185,18 @@ void Insert(BPlusTreeNode *Cur, int key, void *value)
         Split(Cur);
 }
 /** Interface: Insert (key, value) into B+tree */
-int BPlusTree_Insert(int key, void *value)
+int BPlusTree_Insert(int key, BPlusTreeRecorder* value)
 {
     BPlusTreeNode *Leaf = Find(key);
     int i = Binary_Search(Leaf, key);
-    if (Leaf->key[i] == key)
-        return false;
+    if (Leaf->key[i] == key){
+        BPlusTreeRecorder *rec = (BPlusTreeRecorder *)Leaf->child[i];
+        while(rec->next){
+            rec = rec->next;
+        }
+        rec->next = value;
+        return true;
+    }  
     Insert(Leaf, key, value);
     return true;
 }
@@ -208,13 +212,17 @@ void bplus_init_tree()
     Root = New_BPlusTreeNode();
     Root->isRoot = true;
     Root->isLeaf = true;
-    TotalNodes = 0;
 }
 
 int bplus_insert_recoder(char *str)
 {
-    if(!BPlusTree_Insert(get_hash(str), str)){
-
+    char* recorder_str = (char *)malloc(strlen(str));
+    strcpy(recorder_str, str);
+    BPlusTreeRecorder* new_recorder = (BPlusTreeRecorder *)malloc(sizeof(BPlusTreeRecorder));
+    new_recorder->str = recorder_str;
+    new_recorder->next = NULL;
+    if(!BPlusTree_Insert(get_hash(str), new_recorder)){
+        
     }
     return 1;
 }
