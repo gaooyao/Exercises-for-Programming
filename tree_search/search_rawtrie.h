@@ -1,7 +1,7 @@
 #ifndef search_rawtrie
 #define search_rawtrie
 typedef struct TrieNode {
-    struct TrieNode *child [256];
+    struct TrieNode* child [256];
     int isEndOfWord;
     int count;  //子节点的数量
     char value;//该节点的字符
