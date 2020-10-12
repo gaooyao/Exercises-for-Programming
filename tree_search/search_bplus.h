@@ -1,18 +1,17 @@
 #ifndef search_bplus
 #define search_bplus
 
-#define MAX_CHILD_NUMBER 64
+#include <stdint.h>
 
-typedef struct BPlusTreeNode
+#define ORDER 64
+
+typedef struct bptree
 {
-    int isRoot, isLeaf;
-    int key_num;
-    int key[MAX_CHILD_NUMBER];
-    struct BPlusTreeNode *child[MAX_CHILD_NUMBER];
-    struct BPlusTreeNode *father;
-    struct BPlusTreeNode *next;
-    struct BPlusTreeNode *last;
-} BPlusTreeNode;
+    uint64_t *keys;
+    void **pointers;
+    uint16_t is_leaf : 1;
+    uint16_t nr_keys : 15;
+}BPTree;
 
 typedef struct BPlusTreeRecorder
 {
@@ -20,15 +19,10 @@ typedef struct BPlusTreeRecorder
     struct BPlusTreeRecorder *next;
 } BPlusTreeRecorder;
 
-extern void BPlusTree_SetMaxChildNumber(int);
-extern void BPlusTree_Init();
-extern void BPlusTree_Destroy();
-extern int BPlusTree_Insert(int, BPlusTreeRecorder *);
-extern int BPlusTree_GetTotalNodes();
-extern void BPlusTree_Query_Key(int);
-extern void BPlusTree_Query_Range(int, int);
-extern void BPlusTree_Modify(int, void *);
-extern void BPlusTree_Delete(int);
+BPTree *bptree_alloc(uint64_t key, void *val);
+BPTree *bptree_exists(BPTree *bpt, uint64_t key);
+void bptree_insert(BPTree **root, uint64_t key, void *val);
+void bptree_free(BPTree *bpt);
 
 void bplus_init_tree();
 int bplus_insert_recoder(char *str);
