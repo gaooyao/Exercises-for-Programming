@@ -17,7 +17,7 @@ int main()
     FileHandler *file_string;
     FileHandler *file_result;
     char *result_file_list[4] = {"result_bplus.txt", "result_rawtrie.txt", "result_mtrie.txt", "result_radix.txt"};
-    char operate_list[4] = {'b', ' ', ' ', ' '}; //b:bplus;w:rawtrie;m:mtrie;d:radix;
+    char operate_list[4] = {'m', ' ', ' ', ' '}; //b:bplus;w:rawtrie;m:mtrie;d:radix;
     file_dict = open_file("dict.txt", "rb");
     file_string = open_file("string.txt", "rb");
     typedef void (*init_tree_function)();
@@ -69,8 +69,15 @@ int main()
         {
             insert_recoder(str);
         }
+        int kk = 0;
+
         while (read_line(file_string, &str))
         {
+            kk++;
+            if (kk == 251)
+            {
+                //printf("66");
+            }
             if (query_recoder(str))
             {
                 write_line(file_result, str);
