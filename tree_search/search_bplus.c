@@ -20,13 +20,13 @@ static BPTree *bpt_alloc()
         return NULL;
     }
 
-    bpt->keys = malloc(sizeof(uint64_t) * (ORDER - 1));
+    bpt->keys = malloc(sizeof(uint64_t) * (CHILD_NUM - 1));
     if (!bpt->keys)
     {
         goto release0;
     }
 
-    bpt->pointers = calloc(ORDER, sizeof(void *));
+    bpt->pointers = calloc(CHILD_NUM, sizeof(void *));
     if (!bpt->pointers)
     {
         goto release1;
@@ -130,7 +130,7 @@ BPTree *bptree_search(BPTree *bpt, uint64_t key)
         bpt_index(bpt, key, &kidx, &pidx);
         bpt = bpt->pointers[pidx];
         assert(bpt);
-        assert(bpt->nr_keys >= split(ORDER) - 1);
+        assert(bpt->nr_keys >= split(CHILD_NUM) - 1);
     }
     return bpt;
 }
@@ -198,7 +198,7 @@ void bptree_modify(BPTree *bpt, uint64_t key, void *val)
  */
 static void bpt_inject(BPTree *bpt, int pidx, uint64_t key, void *val)
 {
-    assert(bpt->nr_keys < ORDER - 1);
+    assert(bpt->nr_keys < CHILD_NUM - 1);
     for (int i = bpt->nr_keys; i > pidx; --i)
     {
         bpt->pointers[i + 1] = bpt->pointers[i];
@@ -228,8 +228,8 @@ static void bpt_split_child(BPTree *parent, int pidx)
     BPTree *succ = bpt_alloc();
     BPTree *pred = parent->pointers[pidx];
     succ->is_leaf = pred->is_leaf;
-    succ->nr_keys = split(ORDER - 1);
-    pred->nr_keys = (ORDER - 1) - succ->nr_keys;
+    succ->nr_keys = split(CHILD_NUM - 1);
+    pred->nr_keys = (CHILD_NUM - 1) - succ->nr_keys;
 
     for (int i = 0; i < succ->nr_keys; ++i)
     {
@@ -251,7 +251,7 @@ static void bpt_insert_nonfull(BPTree *bpt, uint64_t key, void *val)
     while (!bpt->is_leaf)
     {
         bpt_index(bpt, key, &kidx, &pidx);
-        if (BPT_P(bpt, pidx)->nr_keys == ORDER - 1)
+        if (BPT_P(bpt, pidx)->nr_keys == CHILD_NUM - 1)
         {
             bpt_split_child(bpt, pidx);
             bpt_index(bpt, key, &kidx, &pidx);
@@ -264,8 +264,8 @@ static void bpt_insert_nonfull(BPTree *bpt, uint64_t key, void *val)
         }
 
         bpt = bpt->pointers[pidx];
-        assert(bpt->nr_keys >= split(ORDER) - 1);
-        assert(bpt->nr_keys < ORDER);
+        assert(bpt->nr_keys >= split(CHILD_NUM) - 1);
+        assert(bpt->nr_keys < CHILD_NUM);
     }
 
     bpt_index(bpt, key, &kidx, &pidx);
@@ -281,7 +281,7 @@ static void bpt_insert_nonfull(BPTree *bpt, uint64_t key, void *val)
  */
 void bptree_insert(BPTree **root, uint64_t key, void *val)
 {
-    if ((*root)->nr_keys == ORDER - 1)
+    if ((*root)->nr_keys == CHILD_NUM - 1)
     {
         BPTree *new_root = bpt_alloc();
         new_root->is_leaf = 0;
@@ -361,9 +361,9 @@ static void bpt_merge(BPTree *parent, int kidx1, int pidx1)
 {
     BPTree *pred = parent->pointers[pidx1 - 1];
     BPTree *succ = parent->pointers[pidx1];
-    assert(pred->nr_keys >= split(ORDER) - 1);
-    assert(succ->nr_keys >= split(ORDER) - 1);
-    assert(succ->nr_keys + pred->nr_keys <= ORDER - 1);
+    assert(pred->nr_keys >= split(CHILD_NUM) - 1);
+    assert(succ->nr_keys >= split(CHILD_NUM) - 1);
+    assert(succ->nr_keys + pred->nr_keys <= CHILD_NUM - 1);
     assert(succ->is_leaf || succ->pointers[0] == NULL);
     bpt_eject(parent, kidx1, pidx1);
     for (int i = 0; i < succ->nr_keys; ++i)
@@ -407,19 +407,19 @@ static void *bpt_delete_noindex(BPTree *bpt, uint64_t key,
         BPTree *curr = BPT_P(bpt, pidx);
         BPTree *pred = pidx == 0 ? NULL : BPT_P(bpt, pidx - 1);
         BPTree *succ = pidx == bpt->nr_keys ? NULL : BPT_P(bpt, pidx + 1);
-        if (curr->nr_keys >= split(ORDER))
+        if (curr->nr_keys >= split(CHILD_NUM))
         {
             val = bpt_delete(BPT_P(bpt, pidx), key);
             bpt->keys[kidx] = BPT_P(bpt, pidx)->keys[0];
         }
-        else if (pred && pred->nr_keys >= split(ORDER))
+        else if (pred && pred->nr_keys >= split(CHILD_NUM))
         {
             bpt_rotate_right(bpt, kidx, pidx - 1);
             val = bpt_delete(BPT_P(bpt, pidx), key);
         }
-        else if (succ && succ->nr_keys >= split(ORDER))
+        else if (succ && succ->nr_keys >= split(CHILD_NUM))
         {
-            assert(!pred || pred->nr_keys == split(ORDER) - 1);
+            assert(!pred || pred->nr_keys == split(CHILD_NUM) - 1);
             bpt_rotate_left(bpt, kidx + 1, pidx + 1);
             val = bpt_delete(BPT_P(bpt, pidx), key);
             bpt->keys[kidx] = BPT_P(bpt, pidx)->keys[0];
@@ -448,14 +448,14 @@ static void *bpt_delete_noindex(BPTree *bpt, uint64_t key,
             return NULL;
         }
 
-        if (child->nr_keys == split(ORDER) - 1)
+        if (child->nr_keys == split(CHILD_NUM) - 1)
         {
             int lhs_donor = pidx - 1 >= 0 &&
                             (lhs = bpt->pointers[pidx - 1]) &&
-                            lhs->nr_keys >= split(ORDER);
+                            lhs->nr_keys >= split(CHILD_NUM);
             int rhs_donor = pidx + 1 <= bpt->nr_keys &&
                             (rhs = bpt->pointers[pidx + 1]) &&
-                            rhs->nr_keys >= split(ORDER);
+                            rhs->nr_keys >= split(CHILD_NUM);
             if (lhs_donor)
             {
                 bpt_rotate_right(bpt, kidx, pidx - 1);
@@ -565,12 +565,8 @@ void bplus_init_tree()
 
 int bplus_insert_recoder(char *str)
 {
-    char *recorder_str = (char *)malloc(strlen(str));
-    strcpy(recorder_str, str);
-    BPlusTreeRecorder *new_recorder = (BPlusTreeRecorder *)malloc(sizeof(BPlusTreeRecorder));
-    new_recorder->str = recorder_str;
-    new_recorder->next = NULL;
-    bptree_insert(&root, get_hash(str), new_recorder);
+
+    bptree_insert(&root, get_hash(str), str);
     return 1;
 }
 

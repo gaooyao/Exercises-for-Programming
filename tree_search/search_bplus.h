@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define ORDER 64
+#define CHILD_NUM 64
 
 typedef struct bptree
 {
@@ -11,13 +11,7 @@ typedef struct bptree
     void **pointers;
     uint16_t is_leaf : 1;
     uint16_t nr_keys : 15;
-}BPTree;
-
-typedef struct BPlusTreeRecorder
-{
-    char *str;
-    struct BPlusTreeRecorder *next;
-} BPlusTreeRecorder;
+} BPTree;
 
 BPTree *bptree_alloc(uint64_t key, void *val);
 BPTree *bptree_exists(BPTree *bpt, uint64_t key);
