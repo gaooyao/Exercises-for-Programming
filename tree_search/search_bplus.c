@@ -209,7 +209,7 @@ void bplus_init_tree()
     Root->isRoot = true;
     Root->isLeaf = true;
     TotalNodes = 0;
-}
+} 
 
 int bplus_insert_recoder(char *str)
 {

@@ -64,7 +64,7 @@ int main()
             continue;
             break;
         }
-        init_tree();
+        
         while (read_line(file_dict, &str))
         {
             if (!insert_recoder(str))
