@@ -19,7 +19,7 @@
 
 #include "string_file_reader.h"
 
-int FILE_BUFFER_SIZE = 262144; //文件缓冲区大小，单位字节
+int FILE_BUFFER_SIZE = 1024; //文件缓冲区大小，单位字节
 
 /*
 * 函数名称：open_file

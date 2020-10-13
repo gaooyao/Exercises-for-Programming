@@ -1,7 +1,7 @@
 #ifndef search_mtrie
 #define search_mtrie
 
-#define M 4
+#define M 2
 
 typedef struct m_tree_node
 {
