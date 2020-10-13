@@ -230,7 +230,7 @@ int radix_insert_recoder(char *str)
         //创建新节点并赋值
         char *c_str = create_new_str(point->str, node_p, point->len);
         Radix_Node *node_c = create_radix_node(c_str);
-        node_c->is_end = 0;
+        node_c->is_end = point->is_end;
         node_c->len = point->len - node_p;
         node_c->child = point->child;
         //更新原节点的数据

@@ -11,9 +11,9 @@ typedef struct radix_node
     struct radix_node *brother; //节点的兄弟节点
 } Radix_Node;
 
-void radix_init_tree();
-int radix_insert_recoder(char *str);
-int radix_query_recoder(char *str);
-void radix_destroy_tree();
+void radix_init_tree();              //初始化radix树
+int radix_insert_recoder(char *str); //插入记录
+int radix_query_recoder(char *str);  //查询记录
+void radix_destroy_tree();           //销毁书
 
 #endif
