@@ -13,13 +13,16 @@ int main()
 {
     int i;
     char *str = NULL;
+    //打开文件
     FileHandler *file_dict;
     FileHandler *file_string;
     FileHandler *file_result;
+    //输出文件列表
     char *result_file_list[4] = {"result_bplus.txt", "result_rawtrie.txt", "result_mtrie.txt", "result_radix.txt"};
-    char operate_list[4] = {'d', ' ', ' ', ' '}; //b:bplus;w:rawtrie;m:mtrie;d:radix;
+    char operate_list[4] = {'d', ' ', ' ', ' '}; //依次调用的搜索方法：b:bplus;w:rawtrie;m:mtrie;d:radix;
     file_dict = open_file("dict.txt", "rb");
     file_string = open_file("string.txt", "rb");
+    //4个函数指针根据搜索方法指向相应的tree函数
     typedef void (*init_tree_function)();
     typedef int (*insert_recoder_function)(char *str);
     typedef int (*query_recoder_function)(char *str);
@@ -32,6 +35,7 @@ int main()
     {
         switch (operate_list[i])
         {
+        //根据operate_list内容切换要被调用的函数
         case 'b':
             init_tree = bplus_init_tree;
             insert_recoder = bplus_insert_recoder;
@@ -64,23 +68,31 @@ int main()
             continue;
             break;
         }
+
+        //初始化树
         init_tree();
+        //读入数据并建树
         while (read_line(file_dict, &str))
         {
             insert_recoder(str);
         }
+        //读入数据并查询
         while (read_line(file_string, &str))
         {
             if (query_recoder(str))
             {
+                //若查询成功则把字符串写入输出文件
                 write_line(file_result, str);
             }
         }
+        //搜索完成，释放树
         destroy_tree();
+        //关闭输出文件，重置dict,string文件以备下次搜索使用
         close_file(file_result);
         reset_file(file_dict);
         reset_file(file_string);
     }
+    //全部搜索结束，关闭文件
     close_file(file_dict);
     close_file(file_string);
     printf("\nProcess finished.\n");

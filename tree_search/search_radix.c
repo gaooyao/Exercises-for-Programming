@@ -1,7 +1,8 @@
-#include "search_radix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "search_radix.h"
 
 /*
 * 函数名称：create_radix_node
@@ -192,8 +193,8 @@ int radix_insert_recoder(char *str)
             if (get_bit(point->str, node_p) != get_bit(str, i))
             {
                 //若两个指针所指Bit不相同则为情况1，需要分裂当前节点并插入新节点
-                Radix_Node *node_l = create_radix_node(' '); //分裂出的新节点，作为当前节点的child
-                node_l->len = point->len - node_p;           //新节点内的有效bit长度为当前节点str值从node_p开始到总长度，即当前节点内值的后半段
+                Radix_Node *node_l = create_radix_node(NULL); //分裂出的新节点，作为当前节点的child
+                node_l->len = point->len - node_p;            //新节点内的有效bit长度为当前节点str值从node_p开始到总长度，即当前节点内值的后半段
                 node_l->str = create_new_str(point->str, node_p, point->len);
 
                 point->str = create_new_str(point->str, 0, node_p); //更新当前节点内的数据，其值为原值的前半段（后半段在新节点中）

@@ -3,24 +3,19 @@
 
 #include <stdint.h>
 
-#define CHILD_NUM 64
+#define CHILD_NUM 64 //B+树的叉数
 
-typedef struct bptree
+typedef struct bptree //B+树的节点
 {
-    uint64_t *keys;
-    void **pointers;
-    uint16_t is_leaf : 1;
-    uint16_t nr_keys : 15;
+    uint64_t *keys;        //关键字key
+    void **pointers;       //指向叶子节点内存储的字符串
+    uint16_t is_leaf : 1;  //用来判断节点是否为叶子节点
+    uint16_t nr_keys : 15; //节点中已存放了多少个关键字
 } BPTree;
 
-BPTree *bptree_alloc(uint64_t key, void *val);
-BPTree *bptree_exists(BPTree *bpt, uint64_t key);
-void bptree_insert(BPTree **root, uint64_t key, void *val);
-void bptree_free(BPTree *bpt);
-
-void bplus_init_tree();
-int bplus_insert_recoder(char *str);
-int bplus_query_recoder(char *str);
-void bplus_destroy_tree();
+void bplus_init_tree();              //初始化树
+int bplus_insert_recoder(char *str); //插入
+int bplus_query_recoder(char *str);  //查询
+void bplus_destroy_tree();           //释放树
 
 #endif

@@ -1,23 +1,17 @@
 #ifndef search_mtrie
 #define search_mtrie
 
-#define M 2
+#define M 2 //M叉树的叉数
 
-typedef struct m_tree_node
+typedef struct m_tree_node //M叉树的节点
 {
-    char is_end;
-    struct m_tree_node *child[1 << M];
+    char is_end;                       //是否有字符串以此节点结束
+    struct m_tree_node *child[1 << M]; //M个子节点
 } MTNode;
 
-typedef struct ex_str
-{
-    char *str;
-    struct ex_str *next;
-} EXStr;
-
-void mtrie_init_tree();
-int mtrie_insert_recoder(char *str);
-int mtrie_query_recoder(char *str);
-void mtrie_destroy_tree();
+void mtrie_init_tree();              //初始化树
+int mtrie_insert_recoder(char *str); //插入节点
+int mtrie_query_recoder(char *str);  //查询节点
+void mtrie_destroy_tree();           //释放树
 
 #endif
