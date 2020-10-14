@@ -6,6 +6,23 @@
 TrieNode *root; //根节点
 
 /*
+* 函数名称：free_trie_node
+* 函数功能：释放一个节点
+*/
+void free_trie_node(TrieNode *node)
+{
+    int i = 255;
+    for (; i >= 0; i--)
+    {
+        if (node->child[i])
+        {
+            free_trie_node(node->child[i]);
+        }
+    }
+    free(node);
+}
+
+/*
 * 函数名称：rawtrie_init_tree
 * 函数功能：初始化树
 */
@@ -92,6 +109,6 @@ void rawtrie_destroy_tree()
 {
     if (root != NULL)
     {
-        free(root);
+        free_trie_node(root);
     }
 }

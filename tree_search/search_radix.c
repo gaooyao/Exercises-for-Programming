@@ -90,10 +90,9 @@ Radix_Node *root_l, *root_r, *point;
 */
 void radix_init_tree()
 {
-    char temp = 'r';
-    root_l = create_radix_node(&temp);
+    root_l = create_radix_node(NULL);
     root_l->len = 65535;
-    root_r = create_radix_node(&temp);
+    root_r = create_radix_node(NULL);
     root_r->len = 65535;
 }
 
@@ -197,7 +196,9 @@ int radix_insert_recoder(char *str)
                 node_l->len = point->len - node_p;            //新节点内的有效bit长度为当前节点str值从node_p开始到总长度，即当前节点内值的后半段
                 node_l->str = create_new_str(point->str, node_p, point->len);
 
+                char *old_point_str = point->str;
                 point->str = create_new_str(point->str, 0, node_p); //更新当前节点内的数据，其值为原值的前半段（后半段在新节点中）
+                free(old_point_str);                                //因为point内字符串已更新，此处释放旧的point内字符串
                 point->len = node_p;
                 point->is_end = 0;
 
@@ -235,7 +236,9 @@ int radix_insert_recoder(char *str)
         node_c->len = point->len - node_p;
         node_c->child = point->child;
         //更新原节点的数据
+        char *old_point_str = point->str;
         point->str = create_new_str(point->str, 0, node_p);
+        free(old_point_str); //因为point内字符串已更新，此处释放旧的point内字符串
         point->len = node_p;
         point->is_end = 1;
         point->child = node_c;

@@ -39,9 +39,8 @@ unsigned int calc(unsigned int k, char *str)
 */
 void free_node(MTNode *node)
 {
-
-    int i;
-    for (i = 0; i < (1 << M); i++)
+    int i = (1 << M) - 1;
+    for (; i >= 0; i--)
     {
         if (node->child[i])
         {
