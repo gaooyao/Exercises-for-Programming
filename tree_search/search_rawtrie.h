@@ -4,9 +4,7 @@
 typedef struct TrieNode
 {                                //rawrite树节点
     struct TrieNode *child[256]; //子节点数组
-    int isEndOfWord;             //此节点是否为某字符串结尾
-    int count;                   //子节点的数量
-    char value;                  //该节点的字符
+    unsigned char is_end;        //此节点是否为某字符串结尾
 } TrieNode;
 
 void rawtrie_init_tree();              //初始化树

@@ -30,7 +30,7 @@ void rawtrie_init_tree()
 {
     root = (TrieNode *)malloc(sizeof(TrieNode));
 
-    root->count = 0;
+    root->is_end = 0;
     int i;
     for (i = 0; i < 256; i++)
     {
@@ -45,7 +45,7 @@ void rawtrie_init_tree()
 TrieNode *rawtrie_new_node()
 {
     TrieNode *obj = (TrieNode *)malloc(sizeof(TrieNode));
-    obj->count = 0;
+    obj->is_end = 0;
     int i;
     for (i = 0; i < 256; i++)
     {
@@ -72,7 +72,7 @@ int rawtrie_insert_recoder(char *str)
         node = node->child[(unsigned char)*p]; /* 指向子节点 */
         p++;
     }
-    node->count++;
+    node->is_end = 1;
     return 1;
 }
 
@@ -97,7 +97,7 @@ int rawtrie_query_recoder(char *str)
     }
     else
     {
-        return (node->count > 0 ? (1) : (0)); //判断此节点是否为结束节点，若是则说明此纪录出现过，返回true
+        return (node->is_end > 0 ? (1) : (0)); //判断此节点是否为结束节点，若是则说明此纪录出现过，返回true
     }
 }
 
