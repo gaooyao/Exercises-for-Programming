@@ -312,7 +312,32 @@ int radix_query_recoder(char *str)
     //若不是上述情况则返回false
     return 0;
 }
+
+/*
+* 函数名称：radix_destroy_node
+* 函数功能：释放一个radix节点
+* 参数：	node：被释放的节点
+*/
+void radix_destroy_node(Radix_Node *node)
+{
+    if (node->brother)
+    {
+        radix_destroy_node(node->brother);
+    }
+    if (node->child)
+    {
+        radix_destroy_node(node->child);
+    }
+    free(node->str);
+    free(node);
+}
+
+/*
+* 函数名称：radix_destroy_tree
+* 函数功能：释放radix树
+*/
 void radix_destroy_tree()
 {
-    printf("destroy d\n");
+    radix_destroy_node(root_l);
+    radix_destroy_node(root_r);
 }
