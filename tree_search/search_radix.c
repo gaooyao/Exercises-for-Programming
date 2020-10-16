@@ -110,7 +110,7 @@ int radix_insert_recoder(char *str)
         return 0;
     }
     //因为首bit有0或1两种情况，所以分两棵树处理，此处判断使用0开头树还是1开头树
-    if ((unsigned char)str[0] >> 7)
+    if ((unsigned char)str[0] >> 7)//左移7位
     {
         point = root_r;
     }
@@ -149,8 +149,8 @@ int radix_insert_recoder(char *str)
         {
             //若被遍历完，则为情况2
             int flag = 0; //用来记录状态，值为0为当前节点无子节点，则新节点作为其child插入，值为1为有子节点，则新节点做为子节点的brother插入，值为2则为找到了可以继续遍历的子节点
-            Radix_Node *old_point = point;
-            Radix_Node *old_point_b = point;
+            Radix_Node *old_point = point;//记录（若子节点为空，则新建一个子节点）
+            Radix_Node *old_point_b = point;//记录（若子节点不符合str，则新建子节点的兄弟节点）
             point = point->child;
             while (point) //开始遍历子节点，寻找能被继续遍历的节点
             {
@@ -163,7 +163,7 @@ int radix_insert_recoder(char *str)
                     flag = 2;
                     break;
                 }
-                old_point_b = point;
+                old_point_b = point;//记录
                 point = point->brother;
                 flag = 1;
             }

@@ -19,7 +19,7 @@ int main()
     FileHandler *file_result;
     //输出文件列表
     char *result_file_list[4] = {"result_bplus.txt", "result_rawtrie.txt", "result_mtrie.txt", "result_radix.txt"};
-    char operate_list[4] = {'b', 'm', 'd', 'w'}; //依次调用的搜索方法：b:bplus;w:rawtrie;m:mtrie;d:radix;
+    char operate_list[4] = {'r', ' ', ' ', ' '}; //依次调用的搜索方法：b:bplus;w:rawtrie;m:mtrie;d:radix;
     file_dict = open_file("dict.txt", "rb");
     file_string = open_file("string.txt", "rb");
     //4个函数指针根据搜索方法指向相应的tree函数
@@ -90,7 +90,7 @@ int main()
         end = clock();
         printf("runtime: %f\s \b string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
         //搜索完成，释放树
-        destroy_tree();
+        //destroy_tree();
         //关闭输出文件，重置dict,string文件以备下次搜索使用
         close_file(file_result);
         reset_file(file_dict);
@@ -100,6 +100,7 @@ int main()
     close_file(file_dict);
     close_file(file_string);
     printf("\nProcess finished.\n");
+    getchar();
     getchar();
     return 0;
 }
