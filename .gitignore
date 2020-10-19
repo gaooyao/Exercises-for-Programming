@@ -358,3 +358,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+aho_corasick_automaton/pattern.txt
+aho_corasick_automaton/string.txt
