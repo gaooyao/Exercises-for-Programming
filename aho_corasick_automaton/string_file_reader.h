@@ -21,7 +21,7 @@
 typedef struct FileHandler
 {							  //文件handler
 	FILE *file;				  //原始文件操作handler
-	char file_name[256];	  //被打开的文件名
+	char file_name[512];	  //被打开的文件名
 	int open_status;		  //文件打开状态，0未打开，1读模式，2写模式
 	int point;				  //当前在buffer中的操作位置指针
 	unsigned int buffer_size; //缓冲区大小
