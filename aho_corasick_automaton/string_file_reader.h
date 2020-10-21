@@ -26,6 +26,7 @@ typedef struct FileHandler
 	int point;				  //当前在buffer中的操作位置指针
 	unsigned int buffer_size; //缓冲区大小
 	char *buffer;			  //缓冲区
+	short end_flag_len;		  //每行字符串结束符长度，如utf-8为1字节，GB2312为2字节
 } FileHandler;
 
 FileHandler *open_file(char *file_name, char *open_type); //打开新文件，open_type为"rb"或"wb"

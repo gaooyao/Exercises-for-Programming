@@ -63,6 +63,7 @@ FileHandler *open_file(char *file_name, char *open_type)
     strcpy(file_handler->file_name, file_name);
     file_handler->open_status = (!strcmp(open_type, "rb") ? 1 : 2); //三元表达式
     file_handler->point = -1;
+    file_handler->end_flag_len = 1;
     return file_handler;
 }
 
@@ -75,6 +76,7 @@ FileHandler *open_file(char *file_name, char *open_type)
 */
 int read_line(FileHandler *file_handler, char **str)
 {
+    int i;
     if (file_handler->open_status != 1)
     {
         return 0; //打开模式为写入时不允许读取
@@ -89,6 +91,10 @@ int read_line(FileHandler *file_handler, char **str)
         if (*(file_handler->buffer + file_handler->point) == -1) //遍历时如果遇到文件结束符则返回最后一行的开始指针
         {
             (*str) = (file_handler->buffer + old_point + 1);
+            for (i = 1; i < file_handler->end_flag_len; i++) //根据行结束符的长度前面补0
+            {
+                *(file_handler->buffer + file_handler->point - 1) = 0;
+            }
             return 1;
         }
         //根据当前指针判断是否需要读入新数据
@@ -156,6 +162,10 @@ int read_line(FileHandler *file_handler, char **str)
             }
             //数据读取成功，str指针指向字符串开头并返回
             *(file_handler->buffer + file_handler->point) = 0; //断行
+            for (i = 1; i < file_handler->end_flag_len; i++)   //根据行结束符的长度前面补0
+            {
+                *(file_handler->buffer + file_handler->point - 1) = 0;
+            }
             (*str) = &(file_handler->buffer[0]);
             return 1;
         }
@@ -163,6 +173,10 @@ int read_line(FileHandler *file_handler, char **str)
     } while (*(file_handler->buffer + file_handler->point) != '\n'); //point指针循环后移，直到遇到换行符则停止
     //没有读入新数据，但已找到被读文本的开头和结尾
     *(file_handler->buffer + file_handler->point) = 0; //断行
+    for (i = 1; i < file_handler->end_flag_len; i++)   //根据行结束符的长度前面补0
+    {
+        *(file_handler->buffer + file_handler->point - 1) = 0;
+    }
     (*str) = (file_handler->buffer + old_point + 1);
     return 1;
 }

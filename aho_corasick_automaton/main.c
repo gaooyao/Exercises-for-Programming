@@ -8,32 +8,21 @@ clock_t start, end;
 int main()
 {
     char *str = NULL;
-    //打开文件
-    FileHandler *file_dict;
-    file_dict = open_file("string.txt", "rb");
+    //打开pattern文件
+    FileHandler *file_pattern;
+    file_pattern = open_file("string.txt", "rb");
+    file_pattern->end_flag_len = 2;
     start = clock();
     int kk = 0;
-    while (read_line(file_dict, &str))
+    long sum = 0;
+    while (read_line(file_pattern, &str))
     {
+        sum += strlen(str);
         kk++;
     }
     end = clock();
+    close_file(file_pattern);
     printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
-    close_file(file_dict);
-
-    start = clock();
-    FILE *f;
-    kk = 0;
-    char c[10000];
-    f = fopen("string.txt", "r");
-    while (fgets(c, 10000, f))
-    {
-        kk++;
-    }
-    end = clock();
-    printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
-    fclose(f);
-     getchar();
-     getchar();
+    
     return 0;
 }
