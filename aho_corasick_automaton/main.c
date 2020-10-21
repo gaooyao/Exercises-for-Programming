@@ -4,21 +4,25 @@
 #include <string.h>
 #include <time.h>
 
+#include "ac_tree.h"
+
 clock_t start, end;
 int main()
 {
     char *str = NULL;
     //打开pattern文件
     FileHandler *file_pattern;
-    file_pattern = open_file("string.txt", "rb");
-    file_pattern->end_flag_len = 2;
+    file_pattern = open_file("pattern.txt", "rb");
     start = clock();
     int kk = 0;
-    long sum = 0;
+    init_tree();
     while (read_line(file_pattern, &str))
     {
-        sum += strlen(str);
         kk++;
+        if(kk%100000==0)
+            printf("kk=%d\n",kk);
+        insert_recoder(str);
+       //printf("%s\n", str);
     }
     end = clock();
     close_file(file_pattern);
