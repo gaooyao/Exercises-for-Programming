@@ -10,23 +10,45 @@ clock_t start, end;
 int main()
 {
     char *str = NULL;
-    //打开pattern文件
+    //打开pattern文件，建树
     FileHandler *file_pattern;
     file_pattern = open_file("pattern.txt", "rb");
-    start = clock();
     int kk = 0;
     init_tree();
+    start = clock();
     while (read_line(file_pattern, &str))
     {
         kk++;
-        if(kk%100000==0)
-            printf("kk=%d\n",kk);
         insert_recoder(str);
-       //printf("%s\n", str);
     }
     end = clock();
+    printf("insert finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     close_file(file_pattern);
-    printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+
+    start = clock();
+    make_turn();
+    end = clock();
+    printf("insert finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     
+
+
+
+    //打开string文件，查找
+    kk = 0;
+    FileHandler *file_string;
+    file_string = open_file("string.txt", "rb");
+    file_string->end_flag_len = 1;
+    start = clock();
+    while (read_line(file_string, &str))
+    {
+        kk++;
+        query_recoder(str,kk);
+    }
+    end = clock();
+    printf("insert finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+    close_file(file_string);
+
+    printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+
     return 0;
 }

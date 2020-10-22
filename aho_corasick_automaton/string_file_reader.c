@@ -82,7 +82,7 @@ int read_line(FileHandler *file_handler, char **str)
         return 0; //打开模式为写入时不允许读取
     }
     int old_point = file_handler->point; //记录当前指针位置
-    if (file_handler->point != -1 && *(file_handler->buffer + file_handler->point) == -1)
+    if (file_handler->point != -1 && ((*(file_handler->buffer + file_handler->point) == -1) || (*(file_handler->buffer + file_handler->point + 1) == -1)))
     {
         return 0; //如果已读到文件末尾则直接返回
     }
@@ -93,8 +93,10 @@ int read_line(FileHandler *file_handler, char **str)
             (*str) = (file_handler->buffer + old_point + 1);
             for (i = 1; i < file_handler->end_flag_len; i++) //根据行结束符的长度前面补0
             {
-                *(file_handler->buffer + file_handler->point - 1) = 0;
+                *(file_handler->buffer + file_handler->point - i) = 0;
             }
+            *(file_handler->buffer + file_handler->point) = 0;
+            *(file_handler->buffer + file_handler->point + 1) = -1;
             return 1;
         }
         //根据当前指针判断是否需要读入新数据
@@ -164,7 +166,7 @@ int read_line(FileHandler *file_handler, char **str)
             *(file_handler->buffer + file_handler->point) = 0; //断行
             for (i = 1; i < file_handler->end_flag_len; i++)   //根据行结束符的长度前面补0
             {
-                *(file_handler->buffer + file_handler->point - 1) = 0;
+                *(file_handler->buffer + file_handler->point - i) = 0;
             }
             (*str) = &(file_handler->buffer[0]);
             return 1;
@@ -175,7 +177,7 @@ int read_line(FileHandler *file_handler, char **str)
     *(file_handler->buffer + file_handler->point) = 0; //断行
     for (i = 1; i < file_handler->end_flag_len; i++)   //根据行结束符的长度前面补0
     {
-        *(file_handler->buffer + file_handler->point - 1) = 0;
+        *(file_handler->buffer + file_handler->point - i) = 0;
     }
     (*str) = (file_handler->buffer + old_point + 1);
     return 1;

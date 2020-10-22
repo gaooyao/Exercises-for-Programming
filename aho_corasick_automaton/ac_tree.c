@@ -4,7 +4,11 @@
 
 #include "ac_tree.h"
 static Node *root;
+static Node *ac_state;
 
+static int n = 0;
+static int k = 0;
+static unsigned int node_num = 0;
 Node *create_new_node()
 {
     Node *_node = (Node *)malloc(sizeof(Node));
@@ -13,6 +17,8 @@ Node *create_new_node()
     _node->child = NULL;
     _node->brother = NULL;
     _node->turn = NULL;
+    _node->queue_next = NULL;
+    _node->num = node_num++;
     return _node;
 }
 
@@ -55,11 +61,31 @@ Node *search_child(Node *node, unsigned char _ch)
 void init_tree()
 {
     root = create_new_node();
+    ac_state = root;
     return;
 }
 
-static int n = 0;
-static int k = 0;
+void output(Node *node, int line_num, int line_position)
+{
+    int k = 0;
+    char out[512];
+    for (; k < 512; k++)
+    {
+        out[k] = 0;
+    }
+    k = 510 * 4 + 3;
+    while (node != root)
+    {
+        out[k / 4] = out[k / 4] | ((node->str & 0b11000000) >> k % 4 * 2);
+        k--;
+        node = node->father;
+    }
+    int len = (2043 - k) / 4;
+    char *ch = &(out[511 - len]);
+    printf("%10s %6d %6d\n", ch, line_num, (line_position + 1) / 4);
+}
+
+
 
 void insert_recoder(char *str)
 {
@@ -79,6 +105,10 @@ void insert_recoder(char *str)
                 j = 0;
                 break;
             }
+            if (!point->brother)
+            {
+                break;
+            }
             point = point->brother;
         }
         if (j)
@@ -86,7 +116,6 @@ void insert_recoder(char *str)
             Node *new_node = create_new_node();
             new_node->str = get_str(str, i);
             new_node->father = point_father;
-            new_node->turn = root;
             if (point)
             {
                 point->brother = new_node;
@@ -95,23 +124,126 @@ void insert_recoder(char *str)
             {
                 point_father->child = new_node;
             }
-            Node *turn_node = new_node->father->turn;
-            while (turn_node)
-            {
-                Node *_node = turn_node;
-                _node = search_child(_node, get_str(str, i));
-                if (_node)
-                {
-                    new_node->turn = _node;
-                    break;
-                }
-                else
-                {
-                    turn_node = turn_node->turn;
-                }
-            }
             point = new_node;
         }
     }
     point->str = point->str | 0b00000001;
+}
+
+Node *fount, *tail;
+Node *_temp;
+Node *get_node()
+{
+    if (fount)
+    {
+        _temp = fount;
+        fount = fount->queue_next;
+        //printf("%d\n",(unsigned int) _temp->num);
+        return _temp;
+    }
+    return NULL;
+}
+
+void put_node(Node *node)
+{
+    if (!fount)
+    {
+        fount = node;
+    }
+    node->queue_next = NULL;
+    tail->queue_next = node;
+    tail = node;
+}
+static int j = 0;
+void mk_turn()
+{
+    Node *node = fount;
+    if (!node)
+    {
+        return;
+    }
+    fount = fount->queue_next;
+    if (node != root)
+    {
+        node->turn = root;
+        node->fail_num = root->num;
+    }
+
+    if (node != root)
+    {
+        Node *turn_node = node->father->turn;
+        while (turn_node)
+        {
+            Node *_node = turn_node;
+            _node = search_child(_node, (unsigned char)node->str & 0b11000000);
+            if (_node)
+            {
+                //printf("%d\n", ++j);
+                node->fail_num = _node->num;
+                node->turn = _node;
+                break;
+            }
+            else
+            {
+                turn_node = turn_node->turn;
+            }
+        }
+    }
+    if(node->brother){
+        put_node(node->brother);
+    };
+    if (node->child)
+    {
+        put_node(node->child);
+    }
+    mk_turn();
+}
+void make_turn()
+{
+    root->turn = NULL;
+    fount = root;
+    tail = root;
+    mk_turn();
+    root->turn = NULL;
+}
+
+void query_recoder(char *str, int line_num)
+{
+    int i;
+    Node *child;
+    short len = strlen(str) * 8 / node_bit_len;
+    for (i = 0; i < len; i++)
+    {
+        if(i%4 == 3){
+            printf("");
+        }
+        child = search_child(ac_state, get_str(str, i));
+        if (child)
+        {
+            ac_state = child;
+            if (ac_state->str & 0b00000001)
+            {
+                output(ac_state, line_num, i);
+            }
+            Node *re_node = ac_state;
+            while (re_node->turn)
+            {
+                if (re_node->turn->str & 0b00000001)
+                {
+                    output(re_node->turn, line_num, i);
+                }
+                re_node = re_node->turn;
+            }
+            
+        }
+        else
+        {
+            if (ac_state->turn)
+            {
+                ac_state = ac_state->turn;
+                i--;
+            }
+            
+        }
+    }
 }
