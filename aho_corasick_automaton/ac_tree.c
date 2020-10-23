@@ -198,11 +198,32 @@ void mk_turn()
     }
     mk_turn();
 }
+BfsNode *brs_front, *bfs_tail;
+void add_to_bfs_queue(Node *node){
+    BfsNode *bfs_node = (BfsNode *)malloc(sizeof(BfsNode));
+    bfs_node->node = node;
+    bfs_node->next = NULL;
+    bfs_tail->next = bfs_node;
+    bfs_tail = bfs_node;
+}
+
+BfsNode *get_bfs_node(){
+    Node *_temp = NULL;
+    Node *bfs_temp = brs_front;
+    if(brs_front){
+        _temp = brs_front->node;
+        brs_front = brs_front->next;
+        free(bfs_temp);
+    }
+    return _temp;
+}
+
 void make_turn()
 {
+    brs_front = (BfsNode *)malloc(sizeof(BfsNode));
+    bfs_tail = brs_front;
+    brs_front->node = root;
     root->turn = NULL;
-    fount = root;
-    tail = root;
     mk_turn();
     root->turn = NULL;
 }

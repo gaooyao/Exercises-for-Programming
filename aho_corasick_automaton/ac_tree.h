@@ -14,6 +14,12 @@ typedef struct node{
     struct node *queue_next;
 } Node;
 
+typedef struct bfs_node{
+    struct node *next;
+    struct node *node;
+} BfsNode;
+
+
 
 void init_tree();
 void insert_recoder(char *str);
