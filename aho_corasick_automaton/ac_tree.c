@@ -3,12 +3,20 @@
 #include <string.h>
 
 #include "ac_tree.h"
-static Node *root;
-static Node *ac_state;
 
-static int n = 0;
-static int k = 0;
-static unsigned int node_num = 0;
+#define MAX_QUEUE_LEN 512 //最大树深
+
+static Node *root;     //树根
+static Node *ac_state; //当前状态
+
+Node *queue_start[MAX_QUEUE_LEN]; //此数组记录节点层数队列开始
+Node *queue_end[MAX_QUEUE_LEN];   //此数组记录节点层数队列结束
+
+/*
+* 函数名称：create_new_node
+* 函数功能：创建新的空节点
+* 返回值：  Node指针
+*/
 Node *create_new_node()
 {
     Node *_node = (Node *)malloc(sizeof(Node));
@@ -17,15 +25,20 @@ Node *create_new_node()
     _node->child = NULL;
     _node->brother = NULL;
     _node->turn = NULL;
-    _node->queue_next = NULL;
-    _node->num = node_num++;
     return _node;
 }
 
+/*
+* 函数名称：get_str
+* 函数功能：取字符串中某二位的数据
+* 参数：    str：字符串
+*          index:求字符串中第多少单位的bit(单位2bit)
+* 返回值：  提取出两位数据，放入空char前两bit,返回构造的char
+*/
 unsigned char get_str(char *str, short index)
 {
-    char _ch;
-    int child_num = 1 << (node_bit_len);
+    char _ch;//存放取出的数据
+    int child_num = 1 << (node_bit_len);//计算取第几字节
     switch (index % child_num)
     {
     case 0:
@@ -41,14 +54,22 @@ unsigned char get_str(char *str, short index)
         _ch = str[index / child_num] & 0b00000011;
         break;
     }
-    return (_ch << (index % child_num * 2));
+    return (_ch << (index % child_num * 2));//提取的数据放入char前两位并返回
 }
 
+/*
+* 函数名称：search_child
+* 函数功能：根据给定字符寻找子节点内是否有相同字符串的节点
+* 参数：    node：在此节点的子节点内寻找
+*           _ch:要寻找的字符
+* 返回值：  Node指针
+*/
 Node *search_child(Node *node, unsigned char _ch)
 {
     node = node->child;
-    while (node)
+    while (node)//遍历子节点
     {
+        //前两bit相同则找到并返回
         if ((node->str & 0b11000000) == _ch)
         {
             return node;
@@ -58,13 +79,21 @@ Node *search_child(Node *node, unsigned char _ch)
     return NULL;
 }
 
+/*
+* 函数名称：init_tree
+* 函数功能：树的初始化
+*/
 void init_tree()
 {
     root = create_new_node();
     ac_state = root;
+    //初始化节点层数队列
+    memset(queue_start, 0, sizeof(Node *) * MAX_QUEUE_LEN);
+    memset(queue_end, 0, sizeof(Node *) * MAX_QUEUE_LEN);
     return;
 }
 
+//输出
 void output(Node *node, int line_num, int line_position)
 {
     int k = 0;
@@ -85,26 +114,32 @@ void output(Node *node, int line_num, int line_position)
     printf("%10s %6d %6d\n", ch, line_num, (line_position + 1) / 4);
 }
 
-
-
+/*
+* 函数名称：insert_recoder
+* 函数功能：树中插入记录
+* 参数：    str：被插入的字符串
+*/
 void insert_recoder(char *str)
 {
     int i;
     Node *point = root;
     short len = strlen(str) * 8 / node_bit_len;
+    //以2bit为步长，遍历此字符串
     for (i = 0; i < len; i++)
     {
-        int j = 1;
+        int j = 1;//标志是否需要创建新节点,1为需要
         Node *point_father = point;
 
         point = point->child;
-        while (point)
+        while (point)//遍历子节点，寻找bit是否已出现
         {
             if ((point->str & 0b11000000) == (int)get_str(str, i))
             {
+                //找到可继续遍历的节点
                 j = 0;
                 break;
             }
+            //未找到则遍历下一个brother
             if (!point->brother)
             {
                 break;
@@ -113,9 +148,22 @@ void insert_recoder(char *str)
         }
         if (j)
         {
+            //需要创建新节点
             Node *new_node = create_new_node();
             new_node->str = get_str(str, i);
             new_node->father = point_father;
+            //新节点加入节点层数队列
+            if (!queue_start[i])
+            {
+                queue_start[i] = new_node;
+                queue_end[i] = new_node;
+            }
+            else
+            {
+                queue_end[i]->turn = new_node;
+                queue_end[i] = new_node;
+            }
+            //修改与新节点有关的指针
             if (point)
             {
                 point->brother = new_node;
@@ -130,102 +178,34 @@ void insert_recoder(char *str)
     point->str = point->str | 0b00000001;
 }
 
-Node *fount, *tail;
-Node *_temp;
-Node *get_node()
+void make_turn()
 {
-    if (fount)
+    int i = 1;
+    for (; i < MAX_QUEUE_LEN; i++)
     {
-        _temp = fount;
-        fount = fount->queue_next;
-        //printf("%d\n",(unsigned int) _temp->num);
-        return _temp;
-    }
-    return NULL;
-}
-
-void put_node(Node *node)
-{
-    if (!fount)
-    {
-        fount = node;
-    }
-    node->queue_next = NULL;
-    tail->queue_next = node;
-    tail = node;
-}
-static int j = 0;
-void mk_turn()
-{
-    Node *node = fount;
-    if (!node)
-    {
-        return;
-    }
-    fount = fount->queue_next;
-    if (node != root)
-    {
-        node->turn = root;
-        node->fail_num = root->num;
-    }
-
-    if (node != root)
-    {
-        Node *turn_node = node->father->turn;
-        while (turn_node)
+        while (queue_start[i])
         {
-            Node *_node = turn_node;
-            _node = search_child(_node, (unsigned char)node->str & 0b11000000);
-            if (_node)
+            Node *now_node = queue_start[i];
+            queue_start[i] = queue_start[i]->turn;
+
+            now_node->turn = root;
+            Node *turn_node = now_node->father->turn;
+            while (turn_node)
             {
-                //printf("%d\n", ++j);
-                node->fail_num = _node->num;
-                node->turn = _node;
-                break;
-            }
-            else
-            {
-                turn_node = turn_node->turn;
+                Node *_node = turn_node;
+                _node = search_child(_node, (unsigned char)now_node->str & 0b11000000);
+                if (_node)
+                {
+                    now_node->turn = _node;
+                    break;
+                }
+                else
+                {
+                    turn_node = turn_node->turn;
+                }
             }
         }
     }
-    if(node->brother){
-        put_node(node->brother);
-    };
-    if (node->child)
-    {
-        put_node(node->child);
-    }
-    mk_turn();
-}
-BfsNode *brs_front, *bfs_tail;
-void add_to_bfs_queue(Node *node){
-    BfsNode *bfs_node = (BfsNode *)malloc(sizeof(BfsNode));
-    bfs_node->node = node;
-    bfs_node->next = NULL;
-    bfs_tail->next = bfs_node;
-    bfs_tail = bfs_node;
-}
-
-BfsNode *get_bfs_node(){
-    Node *_temp = NULL;
-    Node *bfs_temp = brs_front;
-    if(brs_front){
-        _temp = brs_front->node;
-        brs_front = brs_front->next;
-        free(bfs_temp);
-    }
-    return _temp;
-}
-
-void make_turn()
-{
-    brs_front = (BfsNode *)malloc(sizeof(BfsNode));
-    bfs_tail = brs_front;
-    brs_front->node = root;
-    root->turn = NULL;
-    mk_turn();
-    root->turn = NULL;
 }
 
 void query_recoder(char *str, int line_num)
@@ -235,7 +215,8 @@ void query_recoder(char *str, int line_num)
     short len = strlen(str) * 8 / node_bit_len;
     for (i = 0; i < len; i++)
     {
-        if(i%4 == 3){
+        if (i % 4 == 3)
+        {
             printf("");
         }
         child = search_child(ac_state, get_str(str, i));
@@ -255,7 +236,6 @@ void query_recoder(char *str, int line_num)
                 }
                 re_node = re_node->turn;
             }
-            
         }
         else
         {
@@ -264,7 +244,6 @@ void query_recoder(char *str, int line_num)
                 ac_state = ac_state->turn;
                 i--;
             }
-            
         }
     }
 }
