@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "ac_tree.h"
+#include "output.h"
 
 clock_t start, end;
 int main()
@@ -15,6 +16,7 @@ int main()
     file_pattern = open_file("pattern.txt", "rb");
     int kk = 0;
     init_tree();
+    init();
     start = clock();
     while (read_line(file_pattern, &str))
     {
@@ -42,6 +44,10 @@ int main()
     while (read_line(file_string, &str))
     {
         kk++;
+        if(kk%10000==0){
+            printf("%d\n",kk);
+
+        }
         query_recoder(str,kk);
     }
     end = clock();
@@ -49,6 +55,6 @@ int main()
     close_file(file_string);
 
     printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
-
+    output();
     return 0;
 }

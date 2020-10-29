@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "ac_tree.h"
+#include "output.h"
 
 #define MAX_QUEUE_LEN 512 //最大树深
 
@@ -94,8 +95,10 @@ void init_tree()
 }
 
 //输出
-void output(Node *node, int line_num, int line_position)
+void output_self(Node *node, int line_num, int line_position)
 {
+    
+
     int k = 0;
     char out[512];
     for (; k < 512; k++)
@@ -111,7 +114,12 @@ void output(Node *node, int line_num, int line_position)
     }
     int len = (2043 - k) / 4;
     char *ch = &(out[511 - len]);
-    printf("%10s %6d %6d\n", ch, line_num, (line_position + 1) / 4);
+    //printf("%10s %6d %6d\n", ch, line_num, (line_position + 1) / 4);
+
+    insert(ch, line_num);
+
+    return;
+
 }
 
 /*
@@ -225,14 +233,14 @@ void query_recoder(char *str, int line_num)
             ac_state = child;
             if (ac_state->str & 0b00000001)
             {
-                output(ac_state, line_num, i);
+                output_self(ac_state, line_num, i);
             }
             Node *re_node = ac_state;
             while (re_node->turn)
             {
                 if (re_node->turn->str & 0b00000001)
                 {
-                    output(re_node->turn, line_num, i);
+                    output_self(re_node->turn, line_num, i);
                 }
                 re_node = re_node->turn;
             }
