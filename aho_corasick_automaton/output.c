@@ -79,7 +79,6 @@ void output()
     file_handler = fopen("result.txt","w");//
 
     Link *temp = root->next;
-    char t[512];
 
     while(temp){
         fprintf(file_handler,"%s %d",temp->str, temp->num);

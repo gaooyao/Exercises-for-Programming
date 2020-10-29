@@ -24,13 +24,13 @@ int main()
         insert_recoder(str);
     }
     end = clock();
-    printf("insert finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+    printf("build tree finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     close_file(file_pattern);
 
     start = clock();
     make_turn();
     end = clock();
-    printf("insert finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+    printf("build fail point finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     
 
 
@@ -39,7 +39,7 @@ int main()
     kk = 0;
     FileHandler *file_string;
     file_string = open_file("string.txt", "rb");
-    file_string->end_flag_len = 1;
+    file_string->end_flag_len = 2;
     start = clock();
     while (read_line(file_string, &str))
     {
@@ -51,10 +51,12 @@ int main()
         query_recoder(str,kk);
     }
     end = clock();
-    printf("insert finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+    printf("search finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     close_file(file_string);
 
     printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     output();
+    getchar();
+    getchar();
     return 0;
 }

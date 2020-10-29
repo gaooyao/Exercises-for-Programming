@@ -38,8 +38,8 @@ Node *create_new_node()
 */
 unsigned char get_str(char *str, short index)
 {
-    char _ch;//存放取出的数据
-    int child_num = 1 << (node_bit_len);//计算取第几字节
+    char _ch;                            //存放取出的数据
+    int child_num = 1 << (node_bit_len); //计算取第几字节
     switch (index % child_num)
     {
     case 0:
@@ -55,7 +55,7 @@ unsigned char get_str(char *str, short index)
         _ch = str[index / child_num] & 0b00000011;
         break;
     }
-    return (_ch << (index % child_num * 2));//提取的数据放入char前两位并返回
+    return (_ch << (index % child_num * 2)); //提取的数据放入char前两位并返回
 }
 
 /*
@@ -68,7 +68,7 @@ unsigned char get_str(char *str, short index)
 Node *search_child(Node *node, unsigned char _ch)
 {
     node = node->child;
-    while (node)//遍历子节点
+    while (node) //遍历子节点
     {
         //前两bit相同则找到并返回
         if ((node->str & 0b11000000) == _ch)
@@ -97,7 +97,6 @@ void init_tree()
 //输出
 void output_self(Node *node, int line_num, int line_position)
 {
-    
 
     int k = 0;
     char out[512];
@@ -119,7 +118,6 @@ void output_self(Node *node, int line_num, int line_position)
     insert(ch, line_num);
 
     return;
-
 }
 
 /*
@@ -135,13 +133,14 @@ void insert_recoder(char *str)
     //以2bit为步长，遍历此字符串
     for (i = 0; i < len; i++)
     {
-        int j = 1;//标志是否需要创建新节点,1为需要
+        unsigned char ch = get_str(str, i); //要被查找的bit
+        int j = 1;                          //标志是否需要创建新节点,1为需要
         Node *point_father = point;
 
         point = point->child;
-        while (point)//遍历子节点，寻找bit是否已出现
+        while (point) //遍历子节点，寻找bit是否已出现
         {
-            if ((point->str & 0b11000000) == (int)get_str(str, i))
+            if ((point->str & 0b11000000) == (int)ch)
             {
                 //找到可继续遍历的节点
                 j = 0;
@@ -158,7 +157,7 @@ void insert_recoder(char *str)
         {
             //需要创建新节点
             Node *new_node = create_new_node();
-            new_node->str = get_str(str, i);
+            new_node->str = ch;
             new_node->father = point_father;
             //新节点加入节点层数队列
             if (!queue_start[i])
@@ -223,26 +222,18 @@ void query_recoder(char *str, int line_num)
     short len = strlen(str) * 8 / node_bit_len;
     for (i = 0; i < len; i++)
     {
-        if (i % 4 == 3)
-        {
-            printf("");
-        }
         child = search_child(ac_state, get_str(str, i));
         if (child)
         {
             ac_state = child;
-            if (ac_state->str & 0b00000001)
+            Node *out_node = ac_state;
+            while (out_node)
             {
-                output_self(ac_state, line_num, i);
-            }
-            Node *re_node = ac_state;
-            while (re_node->turn)
-            {
-                if (re_node->turn->str & 0b00000001)
+                if (out_node->str & 0b00000001)
                 {
-                    output_self(re_node->turn, line_num, i);
+                    output_self(out_node, line_num, i);
                 }
-                re_node = re_node->turn;
+                out_node = out_node->turn;
             }
         }
         else
