@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "ac_tree.h"
+#include "output.h"
 
 clock_t start, end;
 int main()
@@ -13,46 +14,50 @@ int main()
     //打开pattern文件，建树
     FileHandler *file_pattern;
     file_pattern = open_file("pattern.txt", "rb");
-    int line_num = 0;
+    int kk = 0;
     init_tree();
+    init();
     start = clock();
     while (read_line(file_pattern, &str))
     {
-        line_num++;
+        kk++;
         insert_recoder(str);
     }
     end = clock();
-    printf("build tree finished, use%fsecond\n", (float)(end - start) / CLOCKS_PER_SEC);
+    printf("build tree finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     close_file(file_pattern);
 
-    //构建失效指针
     start = clock();
     make_turn();
     end = clock();
-    printf("build fail point finished, use%fsecond\n", (float)(end - start) / CLOCKS_PER_SEC);
+    printf("build fail point finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
+    
+
+
 
     //打开string文件，查找
-    line_num = 0;
+    kk = 0;
     FileHandler *file_string;
     file_string = open_file("string.txt", "rb");
     file_string->end_flag_len = 2;
     start = clock();
     while (read_line(file_string, &str))
     {
-        line_num++;
-        if (line_num % 10000 == 0)
-        {
-            printf("%d\n", line_num);
+        kk++;
+        if(kk%10000==0){
+            printf("%d\n",kk);
+
         }
-        query_recoder(str, line_num);
+        reset();
+        query_recoder(str,kk);
     }
     end = clock();
-    printf("search finished, use%fsecond\n", (float)(end - start) / CLOCKS_PER_SEC);
+    printf("search finished: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     close_file(file_string);
+
+    printf("runtime: %f, string_match:%d\n", (float)(end - start) / CLOCKS_PER_SEC, kk);
     out_to_result();
-
     getchar();
     getchar();
-
     return 0;
 }

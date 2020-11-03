@@ -1,8 +1,10 @@
 #ifndef ac_tree_head
 #define ac_tree_head
 
-typedef struct out
-{
+#define node_bit_len 2
+
+
+typedef struct out{
     char *str;
     unsigned int num;
     int line_1;
@@ -10,10 +12,8 @@ typedef struct out
     int line_3;
 } Out;
 
-typedef struct node
-{
-    char str;
-    unsigned short is_end;
+typedef struct node{
+    unsigned char str;
     struct node *father;
     struct node *child;
     struct node *brother;
@@ -21,10 +21,14 @@ typedef struct node
     struct out *out;
 } Node;
 
+
+
+
 void init_tree();
 void insert_recoder(char *str);
-void query_recoder(char *str, int line_num);
+void query_recoder(char *str,int line_num);
 void make_turn();
 void out_to_result();
+void reset();
 
 #endif
