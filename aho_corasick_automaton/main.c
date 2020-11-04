@@ -13,12 +13,10 @@ int main()
     //打开pattern文件，建树
     FileHandler *file_pattern;
     file_pattern = open_file("pattern.txt", "rb");
-    int line_num = 0;
     init_tree();
     start = clock();
     while (read_line(file_pattern, &str))
     {
-        line_num++;
         insert_recoder(str);
     }
     end = clock();
@@ -32,7 +30,7 @@ int main()
     printf("build fail point finished, use %f second\n", (float)(end - start) / CLOCKS_PER_SEC);
 
     //打开string文件，查找
-    line_num = 0;
+    int line_num = 0;
     FileHandler *file_string;
     file_string = open_file("string.txt", "rb");
     file_string->end_flag_len = 2;
@@ -49,8 +47,12 @@ int main()
     end = clock();
     printf("search finished, use %f second\n", (float)(end - start) / CLOCKS_PER_SEC);
     close_file(file_string);
-    out_to_result();
 
+    //输出到文件
+    start = clock();
+    out_to_result();
+    end = clock();
+    printf("output to file finished, use%fsecond\n", (float)(end - start) / CLOCKS_PER_SEC);
     getchar();
     getchar();
 
