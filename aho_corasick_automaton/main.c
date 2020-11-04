@@ -29,7 +29,7 @@ int main()
     start = clock();
     make_turn();
     end = clock();
-    printf("build fail point finished, use%fsecond\n", (float)(end - start) / CLOCKS_PER_SEC);
+    printf("build fail point finished, use %f second\n", (float)(end - start) / CLOCKS_PER_SEC);
 
     //打开string文件，查找
     line_num = 0;
@@ -47,7 +47,7 @@ int main()
         query_recoder(str, line_num);
     }
     end = clock();
-    printf("search finished, use%fsecond\n", (float)(end - start) / CLOCKS_PER_SEC);
+    printf("search finished, use %f second\n", (float)(end - start) / CLOCKS_PER_SEC);
     close_file(file_string);
     out_to_result();
 
