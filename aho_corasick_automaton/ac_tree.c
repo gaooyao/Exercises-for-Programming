@@ -210,12 +210,15 @@ void out_to_result()
     Node *node = out_start;
     Node *out_node_list[out_num];
     int i = 0;
+    unsigned int j = 0;
     while (node)
     {
+        j += node->out->num;
         out_node_list[i] = node;
         node = node->turn;
         i++;
     }
+    printf("find pattern number: %d\n", j);
     //第三步，快速排序
     quick_sort(out_node_list, 0, out_num - 1);
     //第四步，此时已排好序，按序输出到文件
