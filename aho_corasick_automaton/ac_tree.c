@@ -134,11 +134,12 @@ void add_num(Node *node, int line_num)
 * 函数功能：快速排序算法，具体参考数据结构课本
 * 参数说明：arr:存储所有有输出节点的数组
 */
+Node *temp;
 void quick_sort(Node **arr, int begin, int end)
 {
     if (begin < end)
     {
-        Node *temp = arr[begin];
+        temp = arr[begin];
         int i = begin;
         int j = end;
         while (i < j)
@@ -199,16 +200,18 @@ void get_out(Node *node)
 * 函数名称：out_to_result
 * 函数功能：此函数被main调用，负责遍历树，找到输出节点，整理并输出
 */
+Node *out_node_list[700000];
 void out_to_result()
 {
-    //第一步，把输出节点穿成串
+    //第一步，把输出节点成串
     out_start = NULL;
     out_end = NULL;
     get_out(root);
+    printf("matched number in pattern.txt is %d\n",out_num);
     out_end->turn = NULL;
     //第二步，把这些节点放到一个数组里，为快速排序做准备
     Node *node = out_start;
-    Node *out_node_list[out_num];
+    
     int i = 0;
     while (node)
     {
