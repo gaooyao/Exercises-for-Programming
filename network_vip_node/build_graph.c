@@ -40,73 +40,38 @@ void match_link(char *file_name, char *file_path)
 
 void travel_file(char *path, void (*operator)(char *file_name, char *file_path))
 {
+    DIR *dir;
+    struct dirent *ptr;
     char dir_path[1000];
-    strcpy(dir_path, path);
-    strcat(dir_path, "\\*.*");
-    intptr_t handle;
-    struct _finddata64i32_t findData;
-    handle = _findfirst(dir_path, &findData);
-    if (handle == -1)
+    if ((dir = opendir(path)) == NULL)
     {
         return;
     }
-    do
+    while ((ptr = readdir(dir)) != NULL)
     {
-        if (findData.attrib & _A_SUBDIR)
+        if (strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)
         {
-            if (strcmp(findData.name, ".") == 0 || strcmp(findData.name, "..") == 0)
-            {
-                continue;
-            }
-            strcpy(dir_path, path);
-            strcat(dir_path, dir_sp);
-            strcat(dir_path, findData.name);
-            travel_file(dir_path, operator);
+            continue;
         }
         else
         {
-            operator(findData.name, path);
+            int file_name_len = strlen(ptr->d_name);
+            if (ptr->d_type == 8)
+            {
+                operator(ptr->d_name, path);
+            }
+            else if (ptr->d_type == 4)
+            {
+                memset(dir_path, '\0', sizeof(dir_path));
+                strcpy(dir_path, path);
+                strcat(dir_path, dir_sp);
+                strcat(dir_path, ptr->d_name);
+                travel_file(dir_path, create_file_queue);
+            }
         }
-    } while (_findnext(handle, &findData) == 0);
-    _findclose(handle);
+    }
+    closedir(dir);
 }
-
-// void travel_file(char *path, void (*operator)(char *file_name, char *file_path))
-// {
-//     DIR *dir;
-//     struct dirent *ptr;
-//     char dir_path[1000];
-//     if ((dir = opendir(path)) == NULL)
-//     {
-//         return;
-//     }
-//     while ((ptr = readdir(dir)) != NULL)
-//     {
-//         if (strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)
-//         {
-//             continue;
-//         }
-//         else
-//         {
-//             int file_name_len = strlen(ptr->d_name);
-//             if (ptr->d_name[file_name_len - 2] == 'm' && ptr->d_name[file_name_len - 1] == 'l')
-//             {
-//                 operator(ptr->d_name, path);
-//                 file_num++;
-//             }
-//             else
-//             {
-//                 dir_num++;
-//                 memset(dir_path, '\0', sizeof(dir_path));
-//                 strcpy(dir_path, path);
-//                 strcat(dir_path, dir_sp);
-//                 strcat(dir_path, ptr->d_name);
-//                 travel_file(dir_path, create_file_queue);
-//             }
-//         }
-//     }
-//     closedir(dir);
-// }
 
 void build_graph()
 {

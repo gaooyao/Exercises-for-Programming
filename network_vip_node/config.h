@@ -5,6 +5,6 @@
 
 #define link_mask_num 7
 
-#define dir_sp "\\"
+#define dir_sp "/"
 
 #endif
