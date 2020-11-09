@@ -6,7 +6,7 @@
 
 #include "config.h"
 
-void read_file_fist(char *path)
+void read_file_list(char *path)
 {
     DIR *dir;
     struct dirent *ptr;
@@ -45,5 +45,5 @@ void build_graph()
     printf("%s\n", base_path);
     strcat(base_path, web_page_dir_path);
     printf("%s\n", base_path);
-    read_file_fist(base_path);
+    read_file_list(base_path);
 }
