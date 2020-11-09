@@ -10,29 +10,28 @@ void read_file_fist(char *path)
 {
     DIR *dir;
     struct dirent *ptr;
-    char base[1000];
-
+    char dir_path[1000];
     if ((dir = opendir(path)) == NULL)
     {
-        perror("Open dir error...");
-        exit(1);
+        return;
     }
-
     while ((ptr = readdir(dir)) != NULL)
     {
         if (strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)
+        {
             continue;
+        }
         else if (ptr->d_type == 8) ///file
             printf("d_name:%s/%s\n", path, ptr->d_name);
         else if (ptr->d_type == 10) ///link file
             printf("d_name:%s/%s\n", path, ptr->d_name);
         else if (ptr->d_type == 4) ///dir
         {
-            memset(base, '\0', sizeof(base));
-            strcpy(base, path);
-            strcat(base, "/");
-            strcat(base, ptr->d_name);
-            readFileList(base);
+            memset(dir_path, '\0', sizeof(dir_path));
+            strcpy(dir_path, path);
+            strcat(dir_path, "/");
+            strcat(dir_path, ptr->d_name);
+            read_file_list(dir_path);
         }
     }
     closedir(dir);
@@ -40,13 +39,11 @@ void read_file_fist(char *path)
 
 void build_graph()
 {
-    DIR *dir;
-    char basePath[1000];
-    memset(basePath, '\0', sizeof(basePath));
-    getcwd(basePath, 999);
-    printf("the current dir is : %s\n", basePath);
-
-    memset(basePath, '\0', sizeof(basePath));
-    strcpy(basePath, "./XL");
-    read_file_fist(basePath);
+    char base_path[1000] = {0};
+    getcwd(base_path, 1024);
+    printf("%s\n", web_page_dir_path);
+    printf("%s\n", base_path);
+    strcat(base_path, web_page_dir_path);
+    printf("%s\n", base_path);
+    read_file_fist(base_path);
 }
