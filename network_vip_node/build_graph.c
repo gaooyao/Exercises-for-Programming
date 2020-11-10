@@ -1,5 +1,4 @@
 #include <dirent.h>
-#include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +7,7 @@
 #include "build_graph.h"
 #include "config.h"
 
-char base_path[1000] = {0};
+char base_path[4096] = {0};
 int base_path_len = 0;
 unsigned int file_num = 0;
 
@@ -22,6 +21,9 @@ void create_file_queue(char *file_name, char *file_path)
     {
         file_num++;
         //printf("%s\n", file_name);
+        if(!strcmp(file_name,"sichuan.shtml")){
+            printf("we");
+        }
         char *ch = (char *)malloc(strlen(file_path) + strlen(file_name) - base_path_len + 1);
         strcpy(ch, &file_path[base_path_len]);
         strcat(ch, dir_sp);
@@ -42,7 +44,8 @@ void travel_file(char *path, void (*operator)(char *file_name, char *file_path))
 {
     DIR *dir;
     struct dirent *ptr;
-    char dir_path[1000];
+    char dir_path[4096];
+    printf("%s\n",path);
     if ((dir = opendir(path)) == NULL)
     {
         return;
@@ -78,7 +81,7 @@ void build_graph()
     file_queue_front = (FileNode *)malloc(sizeof(FileNode));
     file_queue_front->path = NULL;
     file_queue_tail = file_queue_front;
-    getcwd(base_path, 1024);
+    getcwd(base_path, 4096);
     strcat(base_path, web_page_dir_path);
     base_path_len = strlen(base_path);
     travel_file(base_path, create_file_queue);
