@@ -1,11 +1,13 @@
-
+#include <stdio.h>
+#include <time.h>
 #include "config.h"
 #include "build_graph.h"
-#include <time.h>
+
 int main(){
-    clock_t s=clock();
+    clock_t s,e;
+    s=clock();
     build_graph();
-    clock_t e=clock();
-    printf("%d",e-s/1000);
+    e=clock();
+    printf("time %f s.",(float)(e - s) / CLOCKS_PER_SEC);
     return 0;
 }

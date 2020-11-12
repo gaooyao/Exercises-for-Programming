@@ -253,7 +253,7 @@ void query_recoder(char *str, int file_node_id)
             {
                 if (out_node->is_end)
                 {
-                    printf("file %s has link to %s.\n", file_index_list[file_node_id]->path, file_index_list[out_node->file_id]->path);
+                    //printf("file %s has link to %s.\n", file_index_list[file_node_id]->path, file_index_list[out_node->file_id]->path);
                 }
                 out_node = out_node->turn;
             }
@@ -303,6 +303,7 @@ void match_link()
         {
             query_recoder(str, i);
         }
+        close_file(file);
         file_node = file_node->next;
         i++;
         //printf("%d\n", i);
@@ -323,7 +324,4 @@ void build_graph()
     build_ac_tree();
     make_turn();
     match_link();
-    getchar();
-    getchar();
-    getchar();
 }
