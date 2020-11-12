@@ -23,6 +23,8 @@ mono_crash.*
 result*.txt
 
 network_vip_node/news.sohu.com
+network_vip_node/graph.bin
+
 
 .vs
 .vscode
