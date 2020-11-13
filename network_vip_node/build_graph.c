@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "config.h"
 #include "build_graph.h"
@@ -269,16 +270,29 @@ void ac_query_recoder(char *str, int file_node_id)
             {
                 if (out_node->is_end)
                 {
-                    //TODO:若一个网页中有多个相同的出链信息，则只应算做一次
-                    //需要增加一条出链信息
-                    file_index_list[file_node_id]->out_file_front->file_id++; //对应FileNode结点的出链数量加一
-                    //创建新的出链信息结点
-                    file_index_list[file_node_id]->out_file_tail->next = (FileId *)malloc(sizeof(FileId));
-                    //FileNode的出链队列的队尾指针后移，指向新创建的出链结点并赋相应值
-                    file_index_list[file_node_id]->out_file_tail = file_index_list[file_node_id]->out_file_tail->next;
-                    file_index_list[file_node_id]->out_file_tail->file_id = out_node->file_id;
-                    file_index_list[file_node_id]->out_file_tail->next = NULL;
-                    //printf("file %s has link to %s.\n", file_index_list[file_node_id]->path, file_index_list[out_node->file_id]->path);
+                    //若一个网页中有多个相同的出链信息，则只应算做一次，所以要先判断是否已经统计过此出链信息
+                    int need_add_new_out_flag = 1;
+                    FileId *old_file_id = file_index_list[file_node_id]->out_file_front->next;
+                    while (old_file_id) //遍历出链队列，判断某出链id是否等于要新加的出链id，若是则不增加出链信息
+                    {
+                        if (old_file_id->file_id == out_node->file_id)
+                        {
+                            need_add_new_out_flag = 0;
+                            break;
+                        }
+                        old_file_id = old_file_id->next;
+                    }
+                    if (need_add_new_out_flag) //需要增加一条出链信息
+                    {
+                        file_index_list[file_node_id]->out_file_front->file_id++; //对应FileNode结点的出链数量加一
+                        //创建新的出链信息结点
+                        file_index_list[file_node_id]->out_file_tail->next = (FileId *)malloc(sizeof(FileId));
+                        //FileNode的出链队列的队尾指针后移，指向新创建的出链结点并赋相应值
+                        file_index_list[file_node_id]->out_file_tail = file_index_list[file_node_id]->out_file_tail->next;
+                        file_index_list[file_node_id]->out_file_tail->file_id = out_node->file_id;
+                        file_index_list[file_node_id]->out_file_tail->next = NULL;
+                        //printf("file %s has link to %s.\n", file_index_list[file_node_id]->path, file_index_list[out_node->file_id]->path);
+                    }
                 }
                 out_node = out_node->turn;
             }
@@ -343,15 +357,17 @@ void match_link()
         close_file(file); //关闭文件
         file_node = file_node->next;
         i++;
-        printf("%d\n", i);
+        if (!(i % 10000))
+        {
+            printf("Finished webpage number: %6d.\n", i);
+        }
     }
 }
 /*
 函数说明：此函数遍历file_index_list数组，找到每个FileNode，并把其出链信息保存到graph.bin中
          graph.bin的数据格式为：
             前4字节：网页文件数目n
-            之后n行：
-                    网页文件路径; 此网页出链数目m; m个int，每个int代表出链指向的网页的id
+            之后n行：网页文件路径; 此网页出链数目m; m个int，每个int代表出链指向的网页的id
          隐含信息：第k行代表此网页的id为k
 */
 void put_data_to_bin()
@@ -395,6 +411,9 @@ void put_data_to_bin()
 */
 void build_graph()
 {
+    printf("Start generate graph.bin.\n");
+    clock_t start_time, end_time;
+    start_time = clock();
     //创建FileNode队列
     file_queue_front = (FileNode *)malloc(sizeof(FileNode));
     file_queue_front->path = 0;
@@ -404,16 +423,24 @@ void build_graph()
     getcwd(base_path, 4096);
     strcat(base_path, web_page_dir_path);
     base_path_len = strlen(base_path);
+    printf("The directory where the webpage stored is %s.\n", base_path);
     //遍历文件夹，构建FileNode队列
+    printf("Start map all webpage...\n");
     travel_file(base_path, create_file_queue);
+    printf("Map webpage finished, the webpage number is %d.\n", file_num);
     //初始化ac状态机
+    printf("Start build ac-state-machine.\n");
     ac_init_tree();
     //文件信息插入ac状态机
     build_ac_tree();
     //构建ac状态机失效指针
     ac_make_turn();
     //读取每个网页文件并在ac状态机中匹配
+    printf("Start matching in the ac-state-machine.\n");
     match_link();
     //输出所有网页出链信息到graph.bin
+    printf("Start exporting all information to the graph.bin.\n");
     put_data_to_bin();
+    end_time = clock();
+    printf("Generate graph.bin finished, use time %f seconds.\n", (float)(end_time - start_time) / CLOCKS_PER_SEC);
 }
