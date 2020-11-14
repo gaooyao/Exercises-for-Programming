@@ -11,14 +11,11 @@ int main()
     s = clock();
     //build_graph(); //输出出链信息到graph.bin
     e = clock();
-    printf("time %f s.", (float)(e - s) / CLOCKS_PER_SEC);
+    //printf("time %f s.", (float)(e - s) / CLOCKS_PER_SEC);
 
     s = clock();
     page_rank(); //输出出链信息到graph.bin
     e = clock();
-    printf("time %f s.", (float)(e - s) / CLOCKS_PER_SEC);
-    getchar();
-    getchar();
-    getchar();
+    printf("ALL time: %f s.", (float)(e - s) / CLOCKS_PER_SEC);
     return 0;
 }

@@ -199,7 +199,10 @@ void page_rank()
         printf("The iteration %d completed, now the error rate is %f, use time %f seconds.\n", iteration_num, error, (float)(iteration_end - iteration_start) / CLOCKS_PER_SEC);
     } while (error > page_rank_error);
     //输出前20名
+    FILE *result_file;
+    result_file = fopen("page_rank_result.txt", "w");
     printf("Iteration number: %d.\n", iteration_num);
+    fprintf(result_file, "Iteration number: %d.\n", iteration_num);
     float max_rank = 0;
     int highest_page_id;
     for (i = 0; i < 20; i++)
@@ -212,9 +215,12 @@ void page_rank()
                 highest_page_id = j;
             }
         }
-        printf("The %dst is %s, pagerank number: %f.\n", i, page_list[highest_page_id]->path, page_rank_new[highest_page_id]);
+        printf("The %2dst's page rank number is %f, path is %s.\n", i + 1, page_rank_new[highest_page_id], page_list[highest_page_id]->path);
+        fprintf(result_file, "The %2d st's page rank number is %f, path is %s.\n", i + 1, page_rank_new[highest_page_id], page_list[highest_page_id]->path);
         page_rank_new[highest_page_id] = 0;
+        max_rank = 0;
     }
+    fclose(result_file);
     end_time = clock();
     printf("Generate graph.bin finished, use time %f seconds.\n", (float)(end_time - start_time) / CLOCKS_PER_SEC);
 }
