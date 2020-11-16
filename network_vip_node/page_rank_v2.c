@@ -8,9 +8,9 @@
 #include "config.h"
 #include "page_rank.h"
 
-float page_rank_a = 0.15;      //发生随机跳转概率
-float page_rank_b = 0.85;      //不发生随机跳转概率
-float page_rank_error = 0.001; //rank精确度要求
+float page_rank_a = 0.15;    //发生随机跳转概率
+float page_rank_b = 0.85;    //不发生随机跳转概率
+float accuracy_rate = 0.001; //rank精确度要求
 
 int page_number = 0;                  //网页的总数目
 PageNode **page_list;                 //一个数组，存储网页的出链信息
@@ -259,7 +259,7 @@ void page_rank_v2()
     {
         page_rank_new[i] = temp_weight;
     }
-    //进行幂迭代计算，当误差小于page_rank_error时停止计算
+    //进行幂迭代计算，当误差小于accuracy_rate时停止计算
     float error;
     int iteration_num = 0;
     clock_t iteration_start, iteration_end;
@@ -279,14 +279,14 @@ void page_rank_v2()
         error = calc_error(page_rank_old, page_rank_new);
         iteration_end = clock();
         printf("The iteration %d completed, now the accuracy rate is %f, use time %f seconds.\n", iteration_num, error, (float)(iteration_end - iteration_start) / CLOCKS_PER_SEC);
-    } while (error > page_rank_error); //当精确度小于要求时停止迭代
+    } while (error > accuracy_rate); //当精确度小于要求时停止迭代
     //输出到文件
     FILE *result_file;
     result_file = fopen("page_rank_result.txt", "w");
     //输出迭代次数
     end_time = clock();
-    printf("Iteration number: %d, all time use %f seconds.\n", iteration_num, (float)(end_time - start_time) / CLOCKS_PER_SEC);
-    fprintf(result_file, "Iteration number: %d, all time use %f seconds.\n", iteration_num, (float)(end_time - start_time) / CLOCKS_PER_SEC);
+    printf("Accuracy rate: %f, iteration number: %d, all time use %f seconds.\n", accuracy_rate, iteration_num, (float)(end_time - start_time) / CLOCKS_PER_SEC);
+    fprintf(result_file, "Accuracy rate: %f, iteration number: %d, all time use %f seconds.\n", accuracy_rate, iteration_num, (float)(end_time - start_time) / CLOCKS_PER_SEC);
     float max_rank = 0;
     int highest_page_id;
     //输出rank前20名
