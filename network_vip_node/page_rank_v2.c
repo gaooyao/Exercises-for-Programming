@@ -284,8 +284,9 @@ void page_rank_v2()
     FILE *result_file;
     result_file = fopen("page_rank_result.txt", "w");
     //输出迭代次数
-    printf("Iteration number: %d.\n", iteration_num);
-    fprintf(result_file, "Iteration number: %d.\n", iteration_num);
+    end_time = clock();
+    printf("Iteration number: %d, all time use %f seconds.\n", iteration_num, (float)(end_time - start_time) / CLOCKS_PER_SEC);
+    fprintf(result_file, "Iteration number: %d, all time use %f seconds.\n", iteration_num, (float)(end_time - start_time) / CLOCKS_PER_SEC);
     float max_rank = 0;
     int highest_page_id;
     //输出rank前20名
@@ -306,6 +307,5 @@ void page_rank_v2()
     }
     //rank计算结束
     fclose(result_file);
-    end_time = clock();
     printf("Generate graph.bin finished, use time %f seconds.\n", (float)(end_time - start_time) / CLOCKS_PER_SEC);
 }
