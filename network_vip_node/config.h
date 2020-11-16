@@ -7,4 +7,8 @@
 
 #define dir_sp "/" //文件夹分隔符格式
 
+#define char_len sizeof(char)
+
+#define int_len sizeof(int)
+
 #endif

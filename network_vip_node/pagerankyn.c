@@ -40,5 +40,5 @@ void pagerank_func(){
 
     }
         printf("page=%d\n", page_num);
-        int ELL[][];
+        //int ELL[][];
 }
