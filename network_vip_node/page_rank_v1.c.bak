@@ -10,7 +10,7 @@
 
 float page_rank_a = 0.15;
 float page_rank_b = 0.85;
-float page_rank_error = 0.0001;
+float page_rank_error = 0.001;
 
 int page_number = 0;                  //网页的总数目
 PageNode **page_list;                 //存储网页结点信息
@@ -115,7 +115,7 @@ float calc_error(float *page_rank_old, float *page_rank_new)
 /*
 函数说明：此函数调用各子函数，完成graph.bin构建任务
 */
-void page_rank()
+void page_rank_v1()
 {
     printf("Start read graph.bin.\n");
     clock_t start_time, end_time;
@@ -196,7 +196,7 @@ void page_rank()
         page_rank_new = calc_new_rank(page_rank_new);
         error = calc_error(page_rank_old, page_rank_new);
         iteration_end = clock();
-        printf("The iteration %d completed, now the error rate is %f, use time %f seconds.\n", iteration_num, error, (float)(iteration_end - iteration_start) / CLOCKS_PER_SEC);
+        printf("The iteration %d completed, now the accuracy rate is %f, use time %f seconds.\n", iteration_num, error, (float)(iteration_end - iteration_start) / CLOCKS_PER_SEC);
     } while (error > page_rank_error);
     //输出前20名
     FILE *result_file;

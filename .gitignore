@@ -28,7 +28,7 @@ network_vip_node/page_rank_result.txt
 
 .vs
 .vscode
-
+.history
 *.exe
 *.out.*
 *.out
