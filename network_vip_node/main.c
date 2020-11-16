@@ -3,12 +3,13 @@
 
 #include "config.h"
 #include "build_graph.h"
-
+#include "pagerankyn.h"
 int main()
 {
     clock_t s, e;
     s = clock();
-    build_graph(); //输出出链信息到graph.bin
+    //build_graph(); //输出出链信息到graph.bin
+    pagerank_func();//
     e = clock();
     printf("time %f s.", (float)(e - s) / CLOCKS_PER_SEC);
     return 0;
