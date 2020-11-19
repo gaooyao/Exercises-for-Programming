@@ -9,13 +9,13 @@
 #include "config.h"
 #include "page_rank.h"
 
-#define thread_num 15
+#define thread_num 4 //迭代时用的线程数目
 
-pthread_t tid[thread_num]; //计算rank时用4个线程
-ThreadArr thread_arr[thread_num];
-float page_rank_a = 0.15;    //发生随机跳转概率
-float page_rank_b = 0.85;    //不发生随机跳转概率
-float accuracy_rate = 0.001; //rank精确度要求
+pthread_t tid[thread_num];        //线程指针
+ThreadArr thread_arr[thread_num]; //辅助传参的结构体
+float page_rank_a = 0.15;         //发生随机跳转概率
+float page_rank_b = 0.85;         //不发生随机跳转概率
+float accuracy_rate = 0.001;      //rank精确度要求
 
 int page_number = 0;                  //网页的总数目
 PageNode **page_list;                 //一个数组，存储网页的出链信息
@@ -80,12 +80,18 @@ void quick_sort(int *arr, int begin, int end)
     }
 }
 
+/*
+函数说明：各子线程运行的主函数，负责计算rank与转移概率矩阵的若干列相乘
+参数说明：
+         thread_arr：包含计算时用到的新旧rank，开始结束列的相关数据
+*/
 void *calc_rank(ThreadArr *thread_arr)
 {
     PageNode *page;
     LinkNode *self_link_node;
     int i, j, k, l;
     float sum;
+    //从转移概率矩阵的开始列，到结束列，分别计算与rank值的乘积
     for (i = thread_arr->start_num; i < thread_arr->end_num; i++)
     {
         self_link_node = &link_list[i];
@@ -103,10 +109,6 @@ void *calc_rank(ThreadArr *thread_arr)
             sum += (self_link_node->page_list[j + 1].page_weight * thread_arr->source_rank[k]);
         }
         thread_arr->dis_rank[i] = sum;
-        if (!(i % 10000))
-        {
-            printf("Finished number: %d.\n", i);
-        }
     }
 }
 
@@ -123,26 +125,31 @@ float *calc_new_rank(float *page_rank)
     float sum;
     //创建存储新rank的数组
     float *new_rank = (float *)malloc(sizeof(float) * page_number);
-    //出链节点信息矩阵有page_number列
-
+    //把转移概率矩阵分成thread_num块，分给各子线程运行
     for (int l = 0; l < thread_num; l++)
     {
+        //构造子线程的参数，主要是开始列start_num和结束列end_num
         thread_arr[l].source_rank = page_rank;
         thread_arr[l].dis_rank = new_rank;
         thread_arr[l].start_num = page_number / thread_num * l;
         thread_arr[l].end_num = page_number / thread_num * (l + 1) - 1;
         if (l == thread_num - 1)
         {
+            //最后一个子线程只需计算到最后一列
             thread_arr[l].end_num = page_number - 1;
         }
+        //创建线程开始计算
         pthread_create(&tid[l], NULL, (void *)calc_rank, &thread_arr[l]);
     }
+    //回收各子线程，确保都计算完后再执行后面的语句
     for (int l = 0; l < thread_num; l++)
     {
         pthread_join(tid[l], NULL); //等待线程结束
     }
+    //计算完毕，返回新rank值
     return new_rank;
 }
+
 /*
 函数说明：计算错误率
 参数说明：

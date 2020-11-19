@@ -27,18 +27,17 @@ typedef struct link_node
     struct page_weight *page_list; //有此出链的网页的数组
 } LinkNode;
 
-//出链结点
+//page rank多线程计算时用到的传参结构体
 typedef struct thread_arr
 {
-    float *source_rank;
-    float *dis_rank;
-    int start_num;
-    int end_num;
+    float *source_rank; //旧rank数组
+    float *dis_rank;    //新rank数组，计算结果要存进去
+    int start_num;      //此线程从第几列开始计算
+    int end_num;        //此线程到第几列结束计算
 } ThreadArr;
-
 
 void page_rank_v1(); //计算网页rank主函数，未优化版本
 void page_rank_v2(); //计算网页rank主函数，优化后版本
-void page_rank_v3(); //计算网页rank主函数，优化后版本
+void page_rank_v3(); //计算网页rank主函数，第二次优化后版本
 
 #endif
