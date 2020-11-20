@@ -339,7 +339,7 @@ void page_rank_v3()
             }
         }
         printf("The %2dst's page rank number is %f, path is %s.\n", i + 1, page_rank_new[highest_page_id], page_list[highest_page_id]->path);
-        fprintf(result_file, "The %2d st's page rank number is %f, path is %s.\n", i + 1, page_rank_new[highest_page_id], page_list[highest_page_id]->path);
+        fprintf(result_file, "The %2dst's page rank number is %f, path is %s.\n", i + 1, page_rank_new[highest_page_id], page_list[highest_page_id]->path);
         page_rank_new[highest_page_id] = 0;
         max_rank = 0;
     }
