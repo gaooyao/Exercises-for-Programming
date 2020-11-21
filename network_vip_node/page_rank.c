@@ -42,14 +42,6 @@ float self_sqrt(float x)
 
 float *calc_new_rank(float *page_rank)
 {
-    float ttt = 0;
-    int l;
-    for (l = 0; l < page_number; l++)
-    {
-        ttt += page_rank[l];
-    }
-    printf("sum %f\n", ttt);
-
     PageNode *page;
     int i, j, k;
     float *new_rank = (float *)malloc(sizeof(float) * page_number);
