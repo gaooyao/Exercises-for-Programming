@@ -4,13 +4,14 @@
 #include <time.h>
 #include <limits.h>
 
-#include "string_file_reader.h"
-#include "config.h"
 #include "page_rank.h"
+
+int int_len = sizeof(int);
+int char_len = sizeof(char);
 
 float page_rank_a = 0.15;
 float page_rank_b = 0.85;
-float page_rank_error = 0.001;
+float page_rank_error = 0.0001;
 
 int page_number = 0;                  //网页的总数目
 PageNode **page_list;                 //存储网页结点信息
@@ -22,83 +23,49 @@ double self_pow(double num1, int num2)
     double result = 1;
     int i;
     for (i = 0; i < num2; i++)
+    {
         result *= num1;
+    }
     return result;
 }
 float self_sqrt(float x)
 {
     float xhalf = 0.5f * x;
-    long i;
-    i = *(long *)&x;
-    i = 0x5f3759df - (i >> 1);
-    x = *(float *)&i;
-    x = x * (1.5f - xhalf * x * x);
-    x = x * (1.5f - xhalf * x * x);
-    x = x * (1.5f - xhalf * x * x);
+    int i = *(int *)&x;             // get bits for floating VALUE
+    i = 0x5f375a86 - (i >> 1);      // gives initial guess y0
+    x = *(float *)&i;               // convert bits BACK to float
+    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
+    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
+    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
     return 1 / x;
-}
-
-/*
-函数说明：快速排序算法
-*/
-void quick_sort(int *arr, int begin, int end)
-{
-    int temp;
-    if (begin < end)
-    {
-        temp = arr[begin];
-        int i = begin;
-        int j = end;
-        while (i < j)
-        {
-            while (i < j && arr[j] >= temp)
-            {
-                j--;
-            }
-            arr[i] = arr[j];
-            while (i < j && arr[i] <= temp)
-            {
-                i++;
-            }
-            arr[j] = arr[i];
-        }
-        arr[i] = temp;
-        quick_sort(arr, begin, i - 1);
-        quick_sort(arr, i + 1, end);
-    }
 }
 
 float *calc_new_rank(float *page_rank)
 {
+    float ttt = 0;
+    int l;
+    for (l = 0; l < page_number; l++)
+    {
+        ttt += page_rank[l];
+    }
+    printf("sum %f\n", ttt);
+
     PageNode *page;
-    int i, j;
-    float temp;
+    int i, j, k;
     float *new_rank = (float *)malloc(sizeof(float) * page_number);
     for (i = 0; i < page_number; i++)
     {
-        page_list[i]->next_out_index = 0;
-        page_list[i]->next_out_id = page_list[i]->out_link_list[page_list[i]->next_out_index];
+        new_rank[i] = average_weight;
     }
     for (i = 0; i < page_number; i++)
     {
-        temp = 0;
-        for (j = 0; j < page_number; j++)
+        page = page_list[i];
+        for (j = 0; j < page->out_link_num; j++)
         {
-            page = page_list[j];
-            if (i < page->next_out_id)
-            {
-                temp += (average_weight * page_rank[j]);
-                continue;
-            }
-            page->next_out_id = page->out_link_list[++page->next_out_index];
-            temp += (page->out_link_weight * page_rank[j]);
-        }
-        new_rank[i] = temp;
-        if (!(i % 10000))
-        {
-            printf("Finished number: %d.\n", i);
+            new_rank[page->out_link_list[j]] += ((page_rank[i]) * (page->out_link_weight));
         }
     }
+    free(page_rank);
     return new_rank;
 }
 
@@ -115,7 +82,7 @@ float calc_error(float *page_rank_old, float *page_rank_new)
 /*
 函数说明：此函数调用各子函数，完成graph.bin构建任务
 */
-void page_rank_v1()
+void page_rank()
 {
     printf("Start read graph.bin.\n");
     clock_t start_time, end_time;
@@ -159,18 +126,15 @@ void page_rank_v1()
         fread(&out_link_num, int_len, 1, graph_bin);
         page_list[i]->out_link_num = out_link_num;
         //构建存储此网页出链指向信息的数组
-        page_list[i]->out_link_list = (int *)malloc(sizeof(int) * out_link_num + 1);
+        page_list[i]->out_link_list = (int *)malloc(int_len * out_link_num);
         //对一个网页而言，其所有出链的权重是相同的，这里用out_link_weight存储这些出链的权重。对于此网页，它没有出链指向的网页的权重为average_weight
-        page_list[i]->out_link_weight = ((float)1 / out_link_num) * page_rank_b + average_weight;
+        page_list[i]->out_link_weight = (page_rank_b / out_link_num);
         //读取out_link_num个出链信息
         for (j = 0; j < out_link_num; j++)
         {
             fread(&out_link_page_id, int_len, 1, graph_bin);
             page_list[i]->out_link_list[j] = out_link_page_id;
         }
-        page_list[i]->out_link_list[out_link_num] = INT_MAX; //多存一个int最大值，为了加速矩阵计算
-        //对这个网页的出链的id从小到大排序，为后面幂迭代时计算方便
-        quick_sort(page_list[i]->out_link_list, 0, out_link_num - 1);
     }
     //构建幂迭代的初始向量，这里设为平均分布
     float temp_weight = (float)1 / page_number;
@@ -183,20 +147,16 @@ void page_rank_v1()
     //进行幂迭代计算，当误差小于page_rank_error时停止计算
     float error;
     int iteration_num = 0;
-    clock_t iteration_start, iteration_end;
     do
     {
-        iteration_start = clock();
         iteration_num++;
-        printf("Start iteration %d.\n", iteration_num);
         for (i = 0; i < page_number; i++)
         {
             page_rank_old[i] = page_rank_new[i];
         }
         page_rank_new = calc_new_rank(page_rank_new);
         error = calc_error(page_rank_old, page_rank_new);
-        iteration_end = clock();
-        printf("The iteration %d completed, now the accuracy rate is %f, use time %f seconds.\n", iteration_num, error, (float)(iteration_end - iteration_start) / CLOCKS_PER_SEC);
+        printf("The iteration %d completed, now the accuracy rate is %f.\n", iteration_num, error);
     } while (error > page_rank_error);
     //输出前20名
     FILE *result_file;
