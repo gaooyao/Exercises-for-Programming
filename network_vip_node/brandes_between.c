@@ -8,10 +8,9 @@
 
 int int_len = sizeof(int);
 int char_len = sizeof(char);
-int page_number = 0;
-unsigned long all_path_num = 0;
-
-Page *page_list; //存储网页结点信息
+int page_number = 0;            //网页数量
+unsigned long all_path_num = 0; //所有路径数目
+Page *page_list;                //存储网页结点信息
 
 void brandes_between()
 {
@@ -62,72 +61,79 @@ void brandes_between()
             page_list[i].link_list[j] = out_link_page_id;
         }
     }
-    unsigned int *out_num = (int *)malloc(int_len * page_number);
+    unsigned int *out_num = (int *)malloc(int_len * page_number); //存储每个网页经过它的最短路径数
     memset(out_num, 0, int_len * page_number);
-
-    int *is_visited = (int *)malloc(int_len * page_number);
-    int *new_visited = (int *)malloc(int_len * page_number * 1024);
-
+    int *is_visited = (int *)malloc(int_len * page_number);         //存储是否已经计算过i节点到一个节点的最短路径
+    int *new_visited = (int *)malloc(int_len * page_number * 1024); //缓存新访问的节点
     for (i = 0; i < page_number; i++)
     {
         printf("Calc node %d.\n", i);
-        memset(is_visited, 0, int_len * page_number);
+        memset(is_visited, 0, int_len * page_number); //所有节点都没被访问过
         is_visited[i] = 1;
-        memset(new_visited, 0, int_len * page_number);
-
-        Path *path_point = (Path *)malloc(sizeof(Path));
+        memset(new_visited, 0, int_len * page_number);   //没有新访问的节点
+        Path *path_point = (Path *)malloc(sizeof(Path)); //创建路径信息队列
         path_point->node_num = 1;
         path_point->node_list = (int *)malloc(int_len);
         path_point->node_list[0] = i;
         path_point->next = NULL;
-        Path *path_queue_tail = path_point;
-        int old_path_num = 0;
-        int new_path_num = 1;
+        Path *path_queue_tail = path_point; //路径信息队列的队尾
+        int old_path_num = 0;               //路径信息队列中旧路径的数目
+        int new_path_num = 1;               //路径信息队列中新路径的数目
+        /*
+            每轮遍历访问所有旧路经信息，找到每条老路径末尾节点能到达的新节点并以此创建新路径，
+            直到某一轮遍历找不到任何新路径，则i节点能够到达的所有节点寻找完毕
+        */
         do
         {
             old_path_num = new_path_num;
             new_path_num = 0;
-            while (old_path_num)
+            while (old_path_num) //遍历所有旧路经
             {
-                Page *tail_page = &page_list[path_point->node_list[path_point->node_num - 1]];
+                Page *tail_page = &page_list[path_point->node_list[path_point->node_num - 1]]; //取该路径上最后一个网页节点
+                //遍历该网页节点的出链信息，若一个出链指向的节点未被访问过，则基于当前路径创建一条新路径
                 for (j = 0; j < tail_page->link_num; j++)
                 {
-                    if (!is_visited[tail_page->link_list[j]])
+                    if (!is_visited[tail_page->link_list[j]]) //判断出链指向的节点是否被访问过
                     {
-                        Path *new_path = (Path *)malloc(sizeof(Path));
+                        Path *new_path = (Path *)malloc(sizeof(Path)); //未被访问，创建新路径
                         new_path->node_num = path_point->node_num + 1;
                         new_path->next = NULL;
                         new_path->node_list = (int *)malloc(int_len * new_path->node_num);
+                        //创建新路径的路径信息为老路径信息加新访问的节点
                         for (k = 0; k < path_point->node_num; k++)
                         {
                             new_path->node_list[k] = path_point->node_list[k];
                         }
                         new_path->node_list[new_path->node_num - 1] = tail_page->link_list[j];
+                        //创建的新路径加入路径信息队列
                         path_queue_tail->next = new_path;
                         path_queue_tail = new_path;
+                        //新路径上所有新经过的节点它们的被经过路径数加一，总路径数加一
                         for (k = 1; k < new_path->node_num - 1; k++)
                         {
                             out_num[new_path->node_list[k]]++;
                             all_path_num++;
                         }
+                        //新被访问的节点加入新访问节点队列
                         new_visited[new_path_num] = tail_page->link_list[j];
                         new_path_num++;
                     }
                 }
+                //释放老路径
                 Path *temp_path = path_point;
                 path_point = path_point->next;
                 free(temp_path->node_list);
                 free(temp_path);
                 old_path_num--;
             }
+            //遍历完老路径之后，把所有新被访问到的节点放入已被访问节点列表
             for (j = 0; j < new_path_num; j++)
             {
                 is_visited[new_visited[j]] = 1;
             }
         } while (new_path_num);
     }
-
-    //输出前20名
+    //输出被经过次数最多的前20个网页
     FILE *result_file;
     result_file = fopen("brandes_between_result.txt", "w");
     printf("All path number is %ld.\n", all_path_num);
@@ -150,6 +156,5 @@ void brandes_between()
         max_value = 0;
     }
     fclose(result_file);
-
     return;
 }
