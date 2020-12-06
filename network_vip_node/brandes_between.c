@@ -112,8 +112,8 @@ void brandes_between()
                         for (k = 1; k < new_path->node_num - 1; k++)
                         {
                             out_num[new_path->node_list[k]]++;
-                            all_path_num++;
                         }
+                        all_path_num++;
                         //新被访问的节点加入新访问节点队列
                         new_visited[new_path_num] = tail_page->link_list[j];
                         new_path_num++;
