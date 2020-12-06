@@ -23,8 +23,9 @@ mono_crash.*
 result*.txt
 
 network_vip_node/news.sohu.com
+network_vip_node/news.sohu_brandes_between
 network_vip_node/graph.bin
-network_vip_node/page_rank_result.txt
+#network_vip_node/page_rank_result.txt
 
 .vs
 .vscode

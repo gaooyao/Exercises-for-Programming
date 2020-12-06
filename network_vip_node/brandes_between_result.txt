@@ -1,0 +1,21 @@
+All path number is 9.
+The  1st's page's passing paths is 4, centrality is 0.444444, path is /d.shtml.
+The  2st's page's passing paths is 3, centrality is 0.333333, path is /e.shtml.
+The  3st's page's passing paths is 2, centrality is 0.222222, path is /b.shtml.
+The  4st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The  5st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The  6st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The  7st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The  8st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The  9st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 10st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 11st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 12st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 13st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 14st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 15st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 16st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 17st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 18st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 19st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
+The 20st's page's passing paths is 0, centrality is 0.000000, path is /b.shtml.
