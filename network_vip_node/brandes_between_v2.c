@@ -8,16 +8,14 @@
 #include "brandes_between.h"
 
 #define thread_num 8              //迭代时用的线程数目
+char *bin_name = "graph.bin";     //graph文件名
 pthread_t tid[thread_num];        //线程指针
 ThreadArr thread_arr[thread_num]; //线程传参用的结构体
-
-int int_len = sizeof(int);
-int char_len = sizeof(char);
-char *bin_name = "graph.bin"; //graph文件名
-int page_number = 0;                          //网页数量
-Page *page_list;                              //存储网页结点信息
-
-int new_visited_multiple = 1024; //子线程数据中，存储新访问节点数组相对于总节点数的长度，因为某轮遍历中某个节点会被访问多次，因此有可能出现总新访问次数大于总节点数目，所有要加大存储新访问节点数组的容量
+int int_len = sizeof(int);        //常用到int长度信息，在此算出减少计算量
+int char_len = sizeof(char);      //常用到char长度信息，在此算出减少计算量
+int page_number = 0;              //所有网页的数量
+Page *page_list;                  //存储网页结点信息的队列
+int new_visited_multiple = 1024;  //子线程数据中，存储新访问节点数组相对于总节点数的长度，因为某轮遍历中某个节点会被访问多次，因此有可能出现总新访问次数大于总节点数目，所有要加大存储新访问节点数组的容量。
 
 /*
 函数说明：各子线程运行的主函数，负责对一部分节点进行广度优先搜索，计算出最短路径相关信息
@@ -27,16 +25,16 @@ int new_visited_multiple = 1024; //子线程数据中，存储新访问节点数
 void *calc_ptah_num(ThreadArr *thread_arr)
 {
     int i, j, k;
-    thread_arr->all_path_num = 0;                               //此线程计算出的最短路径数量
-    thread_arr->out_num = (int *)malloc(int_len * page_number); //存储每个网页经过它的最短路径数
-    memset(thread_arr->out_num, 0, int_len * page_number);
+    thread_arr->all_path_num = 0;                                                          //此线程计算出的最短路径数量
+    thread_arr->out_num = (int *)malloc(int_len * page_number);                            //存储每个网页经过它的最短路径数
+    memset(thread_arr->out_num, 0, int_len * page_number);                                 //最短路径数初始化
     thread_arr->is_visited = (int *)malloc(int_len * page_number);                         //存储是否已经计算过i节点到一个节点的最短路径
     thread_arr->new_visited = (int *)malloc(int_len * page_number * new_visited_multiple); //缓存新访问的节点
     for (i = thread_arr->start_num; i <= thread_arr->end_num; i++)
     {
         printf("Thread %d all task %d, now calculating %d.\n", thread_arr->thread_id, thread_arr->all_node_num, i - thread_arr->start_num + 1);
-        memset(thread_arr->is_visited, 0, int_len * page_number); //开始时设所有节点都没被访问过
-        thread_arr->is_visited[i] = 1;
+        memset(thread_arr->is_visited, 0, int_len * page_number);                         //开始时设所有节点都没被访问过
+        thread_arr->is_visited[i] = 1;                                                    //默认i节点已被访问过
         memset(thread_arr->new_visited, 0, int_len * page_number * new_visited_multiple); //新访问的节点数组初始化
         thread_arr->path_point = (Path *)malloc(sizeof(Path));                            //创建路径信息队列
         thread_arr->path_point->node_num = 1;
@@ -46,12 +44,12 @@ void *calc_ptah_num(ThreadArr *thread_arr)
         thread_arr->path_queue_tail = thread_arr->path_point; //路径信息队列的队尾
         thread_arr->old_path_num = 0;                         //遍历时，路径信息队列中旧路径的数目
         thread_arr->new_path_num = 1;                         //遍历时，路径信息队列中新路径的数目
-        /*
+        do
+        {
+            /*
             每轮遍历访问所有旧路经信息，找到每条老路径末尾节点能到达的新节点并以此创建新路径，
             直到某一轮遍历找不到任何新路径，则i节点能够到达的所有节点寻找完毕
         */
-        do
-        {
             thread_arr->old_path_num = thread_arr->new_path_num;
             thread_arr->new_path_num = 0;
             while (thread_arr->old_path_num) //遍历所有旧路经
@@ -67,11 +65,7 @@ void *calc_ptah_num(ThreadArr *thread_arr)
                         thread_arr->new_path->next = NULL;
                         thread_arr->new_path->node_list = (int *)malloc(int_len * thread_arr->new_path->node_num);
                         //创建新路径的路径信息为老路径信息加新访问的节点
-                        //memcpy(thread_arr->new_path->node_list,thread_arr->path_point->node_list,thread_arr->path_point->node_num*int_len);
-                        for (k = 0; k < thread_arr->path_point->node_num; k++)
-                        {
-                            thread_arr->new_path->node_list[k] = thread_arr->path_point->node_list[k];
-                        }
+                        memcpy(thread_arr->new_path->node_list, thread_arr->path_point->node_list, thread_arr->path_point->node_num * int_len);
                         thread_arr->new_path->node_list[thread_arr->new_path->node_num - 1] = thread_arr->tail_page->link_list[j];
                         //创建的新路径加入路径信息队列
                         thread_arr->path_queue_tail->next = thread_arr->new_path;
@@ -92,7 +86,7 @@ void *calc_ptah_num(ThreadArr *thread_arr)
                         thread_arr->new_path_num++;
                     }
                 }
-                //释放老路径
+                //释放老路径节点
                 thread_arr->temp_path = thread_arr->path_point;
                 thread_arr->path_point = thread_arr->path_point->next;
                 free(thread_arr->temp_path->node_list);
@@ -112,10 +106,8 @@ void *calc_ptah_num(ThreadArr *thread_arr)
 void brandes_between()
 {
     printf("Start read graph.bin.\n");
-    clock_t start_time, end_time;
-    start_time = clock();
-    FILE *graph_bin;
     //打开graph.bin
+    FILE *graph_bin;
     if ((graph_bin = fopen(bin_name, "rb")) == NULL)
     {
         printf("Open graph.bin fail!");
@@ -168,11 +160,11 @@ void brandes_between()
         thread_arr[i].end_num = page_number / thread_num * (i + 1) - 1;
         if (i == thread_num - 1)
         {
-            //最后一个子线程只需计算到最后一列
+            //最后一个子线程需计算到最后一个网页节点
             thread_arr[i].end_num = page_number - 1;
         }
         thread_arr[i].all_node_num = thread_arr[i].end_num - thread_arr[i].start_num + 1;
-        //创建线程开始计算
+        //创建线程，开始计算
         pthread_create(&tid[i], NULL, (void *)calc_ptah_num, &thread_arr[i]);
     }
     //回收各子线程，确保都计算完后再执行后面的语句
@@ -209,6 +201,7 @@ void brandes_between()
                 highest_page_id = j;
             }
         }
+        //输出到文件
         printf("The %2dst's page's passing paths is %u, centrality is %f, path is %s.\n", i + 1, out_num[highest_page_id], ((double)max_value) / all_path_num, page_list[highest_page_id].path);
         fprintf(result_file, "The %2dst's page's passing paths is %u, centrality is %f, path is %s.\n", i + 1, out_num[highest_page_id], ((double)max_value) / all_path_num, page_list[highest_page_id].path);
         out_num[highest_page_id] = 0;
