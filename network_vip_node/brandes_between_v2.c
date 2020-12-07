@@ -7,15 +7,15 @@
 
 #include "brandes_between.h"
 
-#define thread_num 12             //迭代时用的线程数目
+#define thread_num 8              //迭代时用的线程数目
 pthread_t tid[thread_num];        //线程指针
 ThreadArr thread_arr[thread_num]; //线程传参用的结构体
 
 int int_len = sizeof(int);
 int char_len = sizeof(char);
 char *bin_name = "graph.bin"; //graph文件名
-int page_number = 0;          //网页数量
-Page *page_list;              //存储网页结点信息
+int page_number = 0;                          //网页数量
+Page *page_list;                              //存储网页结点信息
 
 int new_visited_multiple = 1024; //子线程数据中，存储新访问节点数组相对于总节点数的长度，因为某轮遍历中某个节点会被访问多次，因此有可能出现总新访问次数大于总节点数目，所有要加大存储新访问节点数组的容量
 
@@ -32,9 +32,9 @@ void *calc_ptah_num(ThreadArr *thread_arr)
     memset(thread_arr->out_num, 0, int_len * page_number);
     thread_arr->is_visited = (int *)malloc(int_len * page_number);                         //存储是否已经计算过i节点到一个节点的最短路径
     thread_arr->new_visited = (int *)malloc(int_len * page_number * new_visited_multiple); //缓存新访问的节点
-    for (i = thread_arr->start_num; i < thread_arr->end_num; i++)
+    for (i = thread_arr->start_num; i <= thread_arr->end_num; i++)
     {
-        printf("Thread %d calculating node %d.\n", thread_arr->thread_id, i);
+        printf("Thread %d all task %d, now calculating %d.\n", thread_arr->thread_id, thread_arr->all_node_num, i - thread_arr->start_num + 1);
         memset(thread_arr->is_visited, 0, int_len * page_number); //开始时设所有节点都没被访问过
         thread_arr->is_visited[i] = 1;
         memset(thread_arr->new_visited, 0, int_len * page_number * new_visited_multiple); //新访问的节点数组初始化
@@ -67,6 +67,7 @@ void *calc_ptah_num(ThreadArr *thread_arr)
                         thread_arr->new_path->next = NULL;
                         thread_arr->new_path->node_list = (int *)malloc(int_len * thread_arr->new_path->node_num);
                         //创建新路径的路径信息为老路径信息加新访问的节点
+                        //memcpy(thread_arr->new_path->node_list,thread_arr->path_point->node_list,thread_arr->path_point->node_num*int_len);
                         for (k = 0; k < thread_arr->path_point->node_num; k++)
                         {
                             thread_arr->new_path->node_list[k] = thread_arr->path_point->node_list[k];
@@ -157,10 +158,11 @@ void brandes_between()
             page_list[i].link_list[j] = out_link_page_id;
         }
     }
+    printf("Begin calculate, use %d thread.\n", thread_num);
     //创建多线程，每个线程负责计算一部分网页的介数
     for (int i = 0; i < thread_num; i++)
     {
-        thread_arr[i].thread_id = i;
+        thread_arr[i].thread_id = i + 1;
         //设置该线程需要计算的节点范围
         thread_arr[i].start_num = page_number / thread_num * i;
         thread_arr[i].end_num = page_number / thread_num * (i + 1) - 1;
@@ -169,6 +171,7 @@ void brandes_between()
             //最后一个子线程只需计算到最后一列
             thread_arr[i].end_num = page_number - 1;
         }
+        thread_arr[i].all_node_num = thread_arr[i].end_num - thread_arr[i].start_num + 1;
         //创建线程开始计算
         pthread_create(&tid[i], NULL, (void *)calc_ptah_num, &thread_arr[i]);
     }

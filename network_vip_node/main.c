@@ -14,6 +14,6 @@ int main()
     //page_rank();
     brandes_between();
     gettimeofday(&e, NULL);
-    printf("ALL time: %.3f s.\n", (e.tv_sec - s.tv_sec) + (e.tv_usec - s.tv_usec) / 1000000.0);
+    printf("Finished, all time: %.3f s.\n", (e.tv_sec - s.tv_sec) + (e.tv_usec - s.tv_usec) / 1000000.0);
     return 0;
 }
