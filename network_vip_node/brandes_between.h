@@ -9,6 +9,7 @@ typedef struct page
     int *link_list; //连接的网页列表
 } Page;
 
+//路径结构体
 typedef struct path
 {
     unsigned int node_num; //连接的网页数目

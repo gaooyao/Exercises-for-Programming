@@ -1,0 +1,9 @@
+实验4程序运行说明：
+
+1. bin文件的生成：需要把news.sohu.com文件夹放至本目录，然后编译运行build_graph.c文件，会在目录下生成graph.bin文件。运行用时约150秒。
+
+2. PageRank：生成graph.bin文件后，编译运行page_rank.c文件，运行结果保存在page_rank_result.txt中。运行用时约0.5秒。
+
+3. BetweeNess单线程：生成graph.bin文件后，编译运行brandes_between.c文件，运行结果保存在brandes_between_result.txt中，运行时间需要70多小时。
+
+4. BetweeNess多线程：生成graph.bin文件后，根据计算机CUP核心数量修改brandes_between_multi_thread.c文件的第二行，把thread_num改为期望用的线程数目，之后编译brandes_between_multi_thread.c文件，需要添加-lpthread参数增加对多线程的支持否则报错，之后运行即可，运行结果保存在brandes_between_multi_thread_result.txt中。经测试使用8线程时用了十几个小时，具体运行结果在实验报告中。
