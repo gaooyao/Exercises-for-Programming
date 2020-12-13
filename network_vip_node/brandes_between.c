@@ -61,6 +61,7 @@ void brandes_between()
             page_list[i].link_list[j] = out_link_page_id;
         }
     }
+    fclose(graph_bin);
     unsigned int *out_num = (int *)malloc(int_len * page_number); //存储每个网页经过它的最短路径数
     memset(out_num, 0, int_len * page_number);
     int *is_visited = (int *)malloc(int_len * page_number);         //存储是否已经计算过i节点到一个节点的最短路径
@@ -90,33 +91,39 @@ void brandes_between()
             while (old_path_num) //遍历所有旧路经
             {
                 Page *tail_page = &page_list[path_point->node_list[path_point->node_num - 1]]; //取该路径上最后一个网页节点
+                int is_create_new_path = 0;                                                    //记录是否基于该路径创建了新的路径
                 //遍历该网页节点的出链信息，若一个出链指向的节点未被访问过，则基于当前路径创建一条新路径
                 for (j = 0; j < tail_page->link_num; j++)
                 {
                     if (!is_visited[tail_page->link_list[j]]) //判断出链指向的节点是否被访问过
                     {
+                        is_create_new_path = 1;                        //表示添加了新的路径
                         Path *new_path = (Path *)malloc(sizeof(Path)); //未被访问，创建新路径
                         new_path->node_num = path_point->node_num + 1;
                         new_path->next = NULL;
                         new_path->node_list = (int *)malloc(int_len * new_path->node_num);
                         //创建新路径的路径信息为老路径信息加新访问的节点
-                        for (k = 0; k < path_point->node_num; k++)
-                        {
-                            new_path->node_list[k] = path_point->node_list[k];
-                        }
+                        memcpy(new_path->node_list, path_point->node_list, path_point->node_num * int_len);
                         new_path->node_list[new_path->node_num - 1] = tail_page->link_list[j];
                         //创建的新路径加入路径信息队列
                         path_queue_tail->next = new_path;
                         path_queue_tail = new_path;
-                        //新路径上所有新经过的节点它们的被经过路径数加一，总路径数加一
-                        for (k = 1; k < new_path->node_num - 1; k++)
+                        if (new_path->node_num > 2)
                         {
-                            out_num[new_path->node_list[k]]++;
+                            all_path_num++; //总路径数加一
                         }
-                        all_path_num++;
                         //新被访问的节点加入新访问节点队列
                         new_visited[new_path_num] = tail_page->link_list[j];
                         new_path_num++;
+                    }
+                }
+                //若没有创建新路径，则统计该路径下所有经过的节点，增加经过次数
+                if (!is_create_new_path)
+                {
+                    //路径上从第二个节点到倒数第二个节点，被经过次数依次减少，第二个节点被经过次数为此路径总节点数-2
+                    for (k = 1; k < path_point->node_num - 1; k++)
+                    {
+                        out_num[path_point->node_list[k]] = (out_num[path_point->node_list[k]] + (path_point->node_num - k - 1));
                     }
                 }
                 //释放老路径

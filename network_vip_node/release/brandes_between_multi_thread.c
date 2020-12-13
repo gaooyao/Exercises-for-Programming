@@ -35,6 +35,7 @@ typedef struct thread_arr
     struct path *temp_path;       //一轮遍历中，临时指针
     struct path *path_queue_tail; //一轮遍历中，路径队列的队尾
     struct page *tail_page;       //一轮遍历中，访问页面结构体用到的临时指针
+    int is_create_new_path;       //一轮遍历中，记录是否添加了新路径的临时变量
 } ThreadArr;
 
 #include <stdio.h>
@@ -90,11 +91,13 @@ void *calc_ptah_num(ThreadArr *thread_arr)
             while (thread_arr->old_path_num) //遍历所有旧路经
             {
                 thread_arr->tail_page = &page_list[thread_arr->path_point->node_list[thread_arr->path_point->node_num - 1]]; //取该路径上最后一个网页节点
+                thread_arr->is_create_new_path = 0;                                                                          //记录是否基于该路径创建了新的路径
                 //遍历该网页节点的出链信息，若一个出链指向的节点未被访问过，则基于当前路径创建一条新路径
                 for (j = 0; j < thread_arr->tail_page->link_num; j++)
                 {
                     if (!thread_arr->is_visited[thread_arr->tail_page->link_list[j]]) //判断出链指向的节点是否被访问过
                     {
+                        thread_arr->is_create_new_path = 1;                  //表示添加了新的路径
                         thread_arr->new_path = (Path *)malloc(sizeof(Path)); //未被访问，创建新路径
                         thread_arr->new_path->node_num = thread_arr->path_point->node_num + 1;
                         thread_arr->new_path->next = NULL;
@@ -105,20 +108,24 @@ void *calc_ptah_num(ThreadArr *thread_arr)
                         //创建的新路径加入路径信息队列
                         thread_arr->path_queue_tail->next = thread_arr->new_path;
                         thread_arr->path_queue_tail = thread_arr->new_path;
-                        //若新路径长度大于2，则总路径数加一，经过的节点的被经过数加一，若小于2则说明路径没有经过中间节点，则不增加
+                        //若新路径长度大于2，则总路径数加一，若小于2则说明路径没有经过中间节点，则不增加
                         if (thread_arr->new_path->node_num > 2)
                         {
                             //总路径数加一
                             thread_arr->all_path_num++;
-                            //新路径上所有新经过的节点它们的被经过路径数加一
-                            for (k = 1; k < thread_arr->new_path->node_num - 1; k++)
-                            {
-                                thread_arr->out_num[thread_arr->new_path->node_list[k]]++;
-                            }
                         }
                         //新被访问的节点加入新访问节点队列
                         thread_arr->new_visited[thread_arr->new_path_num] = thread_arr->tail_page->link_list[j];
                         thread_arr->new_path_num++;
+                    }
+                }
+                //若没有创建新路径，则统计该路径下所有经过的节点，增加经过次数
+                if (!thread_arr->is_create_new_path)
+                {
+                    //路径上从第二个节点到倒数第二个节点，被经过次数依次减少，第二个节点被经过次数为此路径总节点数-2
+                    for (k = 1; k < thread_arr->path_point->node_num - 1; k++)
+                    {
+                        thread_arr->out_num[thread_arr->path_point->node_list[k]] = (thread_arr->out_num[thread_arr->path_point->node_list[k]] + (thread_arr->path_point->node_num - k - 1));
                     }
                 }
                 //释放老路径节点
@@ -185,6 +192,7 @@ void brandes_between()
             page_list[i].link_list[j] = out_link_page_id;
         }
     }
+    fclose(graph_bin);
     printf("Begin calculate, use %d thread.\n", thread_num);
     //创建多线程，每个线程负责计算一部分网页的介数
     for (int i = 0; i < thread_num; i++)

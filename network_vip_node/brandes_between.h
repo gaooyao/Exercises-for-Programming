@@ -35,6 +35,7 @@ typedef struct thread_arr
     struct path *temp_path;       //一轮遍历中，临时指针
     struct path *path_queue_tail; //一轮遍历中，路径队列的队尾
     struct page *tail_page;       //一轮遍历中，访问页面结构体用到的临时指针
+    int is_create_new_path;       //一轮遍历中，记录是否添加了新路径的临时变量
 } ThreadArr;
 
 void brandes_between(); //主函数
