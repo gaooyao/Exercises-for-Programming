@@ -11,9 +11,11 @@ In the 2nd stage, Yao Gao  implement the function of writing to and reading from
 ### 2nd Project:
 
 Yao Gao implemented the finding of M-Tree, B+ Tree, and Radix tree.
+
 Yang En implemented the all functions of the initial 256-tree.
 
 ### Project3:
 Yao Gao carried out the construction and finding of search tree.
+
 En Yang carried out the output of search tree.
 
