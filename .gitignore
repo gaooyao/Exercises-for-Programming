@@ -20,9 +20,19 @@ mono_crash.*
 [Dd]ebug/
 [Dd]ebugPublic/
 
+result*.txt
+
+network_vip_node/news.sohu.com
+network_vip_node/news.sohu_brandes_between
+network_vip_node/graph.bin
+#network_vip_node/page_rank_result.txt
+
 .vs
 .vscode
-
+.history
+*.exe
+*.out.*
+*.out
 .DS_Store
 *.xcodeproj
 
@@ -353,3 +363,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+aho_corasick_automaton/pattern.txt
+aho_corasick_automaton/string.txt

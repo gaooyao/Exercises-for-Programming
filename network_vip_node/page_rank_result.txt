@@ -1,0 +1,21 @@
+Iteration number: 20.
+The  1 st's page rank number is 0.025816, path is /guoneixinwen.shtml.
+The  2 st's page rank number is 0.023751, path is /matrix/index.shtml.
+The  3 st's page rank number is 0.023220, path is /guojixinwen.shtml.
+The  4 st's page rank number is 0.019956, path is /shehuixinwen.shtml.
+The  5 st's page rank number is 0.019663, path is /s2015/dianji-1737/index.shtml.
+The  6 st's page rank number is 0.017617, path is /index.html.
+The  7 st's page rank number is 0.013747, path is /bj/index.html.
+The  8 st's page rank number is 0.012720, path is /s2015/qmsht/index.shtml.
+The  9 st's page rank number is 0.011693, path is /1/1003/83/subject214888307.shtml.
+The 10 st's page rank number is 0.007451, path is /s2015/shuzi-408/index.shtml.
+The 11 st's page rank number is 0.007071, path is /s2015/dianji-1736/index.shtml.
+The 12 st's page rank number is 0.007070, path is /s2015/dianji-1735/index.shtml.
+The 13 st's page rank number is 0.007043, path is /s2015/shuzi-407/index.shtml.
+The 14 st's page rank number is 0.006067, path is /1/0903/61/subject212846158.shtml.
+The 15 st's page rank number is 0.005816, path is /s2005/shishi.shtml.
+The 16 st's page rank number is 0.005790, path is /bagua.shtml.
+The 17 st's page rank number is 0.005430, path is /1/0903/63/subject212846373.shtml.
+The 18 st's page rank number is 0.005297, path is /s2015/dianji-1727/index.shtml.
+The 19 st's page rank number is 0.005223, path is /s2015/dianji-1723/index.shtml.
+The 20 st's page rank number is 0.005168, path is /s2015/dianji-1718/index.shtml.

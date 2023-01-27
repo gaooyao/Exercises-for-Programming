@@ -1,0 +1,21 @@
+All path number is 15250553817.
+The  1st's page's passing paths is 3154858871, centrality is 0.206868, path is /guoneixinwen.shtml.
+The  2st's page's passing paths is 1533332863, centrality is 0.100543, path is /1/0903/61/subject212846158.shtml.
+The  3st's page's passing paths is 1429213420, centrality is 0.093716, path is /20150605/n414484792.shtml.
+The  4st's page's passing paths is 1389143926, centrality is 0.091088, path is /1/0903/63/subject212846373.shtml.
+The  5st's page's passing paths is 1324453652, centrality is 0.086846, path is /guojixinwen.shtml.
+The  6st's page's passing paths is 977172954, centrality is 0.064075, path is /special.shtml.
+The  7st's page's passing paths is 926301951, centrality is 0.060739, path is /index.html.
+The  8st's page's passing paths is 846483377, centrality is 0.055505, path is /shehuixinwen.shtml.
+The  9st's page's passing paths is 770630781, centrality is 0.050531, path is /s2015/chunjie/index.shtml.
+The 10st's page's passing paths is 754094721, centrality is 0.049447, path is /1/0203/00/subject206290060.shtml.
+The 11st's page's passing paths is 717417722, centrality is 0.047042, path is /s2005/shishi.shtml.
+The 12st's page's passing paths is 714571808, centrality is 0.046855, path is /1/0504/65/subject220076572.shtml.
+The 13st's page's passing paths is 640155266, centrality is 0.041976, path is /56/77/subject206777756.shtml.
+The 14st's page's passing paths is 637938468, centrality is 0.041831, path is /79/06/subject206590679.shtml.
+The 15st's page's passing paths is 549285354, centrality is 0.036017, path is /s2015/spaceweek2015/index.shtml.
+The 16st's page's passing paths is 507830061, centrality is 0.033299, path is /s2005/zhoubian.shtml.
+The 17st's page's passing paths is 469950340, centrality is 0.030815, path is /1/0903/62/subject212846267.shtml.
+The 18st's page's passing paths is 381517235, centrality is 0.025017, path is /s2005/shenzhouliuhao.shtml.
+The 19st's page's passing paths is 353707339, centrality is 0.023193, path is /51/66/subject143746651.shtml.
+The 20st's page's passing paths is 341357377, centrality is 0.022383, path is /53/66/subject143746653.shtml.

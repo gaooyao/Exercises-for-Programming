@@ -1,0 +1,21 @@
+Accuracy rate: 0.001000, iteration number: 18, all time use 282.685 seconds.
+The  1st's page rank number is 0.020383, path is /guoneixinwen.shtml.
+The  2st's page rank number is 0.019824, path is /matrix/index.shtml.
+The  3st's page rank number is 0.018339, path is /guojixinwen.shtml.
+The  4st's page rank number is 0.015894, path is /s2015/dianji-1737/index.shtml.
+The  5st's page rank number is 0.015689, path is /shehuixinwen.shtml.
+The  6st's page rank number is 0.013386, path is /index.html.
+The  7st's page rank number is 0.010766, path is /bj/index.html.
+The  8st's page rank number is 0.009980, path is /s2015/qmsht/index.shtml.
+The  9st's page rank number is 0.009324, path is /1/1003/83/subject214888307.shtml.
+The 10st's page rank number is 0.006013, path is /s2015/dianji-1736/index.shtml.
+The 11st's page rank number is 0.006012, path is /s2015/dianji-1735/index.shtml.
+The 12st's page rank number is 0.005724, path is /s2015/shuzi-407/index.shtml.
+The 13st's page rank number is 0.005688, path is /s2015/shuzi-408/index.shtml.
+The 14st's page rank number is 0.004775, path is /1/0903/61/subject212846158.shtml.
+The 15st's page rank number is 0.004581, path is /s2015/dianji-1727/index.shtml.
+The 16st's page rank number is 0.004561, path is /s2005/shishi.shtml.
+The 17st's page rank number is 0.004547, path is /bagua.shtml.
+The 18st's page rank number is 0.004524, path is /s2015/dianji-1723/index.shtml.
+The 19st's page rank number is 0.004481, path is /s2015/dianji-1718/index.shtml.
+The 20st's page rank number is 0.004481, path is /s2015/dianji-1725/index.shtml.
