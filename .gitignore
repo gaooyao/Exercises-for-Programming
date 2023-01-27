@@ -20,9 +20,14 @@ mono_crash.*
 [Dd]ebug/
 [Dd]ebugPublic/
 
+result*.txt
+
 .vs
 .vscode
 
+*.exe
+*.out.*
+*.out
 .DS_Store
 *.xcodeproj
 
